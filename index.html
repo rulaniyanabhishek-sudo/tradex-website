@@ -132,8 +132,44 @@
           },
         }
     </script>
+<style>
+@keyframes loading-progress {
+    0% { width: 0%; }
+    80% { width: 90%; }
+    100% { width: 100%; }
+}
+</style>
 </head>
 <body class="flex h-screen overflow-hidden text-on-surface">
+    <!-- Splash Screen Intro -->
+    <div id="intro-splash" style="z-index: 999999;" class="fixed inset-0 flex flex-col items-center justify-center bg-[#090b0e] overflow-hidden select-none">
+        <!-- Particle glow backdrop -->
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(68,224,146,0.1)_0%,transparent_60%)] animate-pulse"></div>
+        
+        <!-- 3D Crystalline Spinning Elements -->
+        <div class="relative w-44 h-44 mb-8 flex items-center justify-center">
+            <!-- Outer Rotating Ring -->
+            <div class="absolute w-36 h-36 border border-tertiary/20 rounded-full animate-[spin_6s_linear_infinite] shadow-[0_0_40px_rgba(68,224,146,0.1)]"></div>
+            <!-- Inner Reverse Rotating Dashed Ring -->
+            <div class="absolute w-28 h-28 border border-dashed border-secondary/40 rounded-full animate-[spin_10s_linear_infinite_reverse]"></div>
+            <!-- Glowing Holographic Cube Core -->
+            <div class="w-14 h-14 bg-gradient-to-br from-tertiary to-secondary rounded-xl rotate-45 animate-[bounce_2s_infinite] shadow-[0_0_35px_rgba(68,224,146,0.5)] flex items-center justify-center border border-white/20">
+                <span class="material-symbols-outlined text-[#090b0e] text-2xl font-black rotate-[-45deg] animate-pulse">auto_awesome</span>
+            </div>
+        </div>
+        
+        <!-- Credit Titles -->
+        <h1 class="text-[10px] font-label-caps text-outline tracking-[0.3em] mb-2 uppercase animate-pulse">SYSTEM INITIALIZATION</h1>
+        <h2 class="text-lg font-black text-white text-center tracking-wide font-display-lg max-w-sm px-6 leading-relaxed">
+            MADE BY <span class="text-transparent bg-clip-text bg-gradient-to-r from-tertiary via-[#adc6ff] to-secondary drop-shadow-[0_0_15px_rgba(68,224,146,0.5)]">ABHISHEK RULANIYA</span><br>
+            <span class="text-[10px] font-label-caps text-on-surface-variant tracking-[0.18em]">IN 3D &amp; BEST VISUALS POSSIBLE</span>
+        </h2>
+        
+        <!-- Progress bar -->
+        <div class="w-40 h-1 bg-white/5 rounded-full overflow-hidden mt-8 border border-white/5 shadow-inner">
+            <div class="bg-gradient-to-r from-secondary via-tertiary to-secondary h-full rounded-full" style="animation: loading-progress 2.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;"></div>
+        </div>
+    </div>
 <!-- 3D and Shader Backgrounds -->
 <canvas class="fixed inset-0 w-full h-full -z-20" id="shader-canvas"></canvas>
 <div class="fixed inset-0 w-full h-full -z-10 pointer-events-none" id="threejs-container"></div>
@@ -841,6 +877,18 @@
           });
 
           animate();
+        
+          // Splash screen fadeout logic
+          setTimeout(() => {
+            const splash = document.getElementById('intro-splash');
+            if (splash) {
+              splash.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+              splash.style.opacity = '0';
+              splash.style.transform = 'scale(1.05)';
+              splash.style.pointerEvents = 'none';
+              setTimeout(() => splash.remove(), 800);
+            }
+          }, 3000);
         })();
     </script>
 <script src="sidebar_modals.js"></script>
