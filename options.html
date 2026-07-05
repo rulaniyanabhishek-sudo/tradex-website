@@ -242,21 +242,21 @@
 <div class="lg:col-span-8 glass-card p-4 rounded flex items-center justify-between border-l-4 border-tertiary">
 <div class="flex items-center gap-6">
 <div class="space-y-1">
-<h2 class="font-headline-md text-headline-md text-on-surface">RELIANCE INDUSTRIES</h2>
+<h2 id="spot-stock-title" class="font-headline-md text-headline-md text-on-surface">RELIANCE INDUSTRIES</h2>
 <div class="flex items-center gap-2">
-<span class="bg-tertiary-container/40 text-tertiary px-2 py-0.5 rounded font-label-caps backdrop-blur-sm">BULLISH INDICATOR</span>
-<span class="text-outline font-data-tabular">NSE: RELIANCE</span>
+<span id="spot-stock-indicator" class="bg-tertiary-container/40 text-tertiary px-2 py-0.5 rounded font-label-caps backdrop-blur-sm">BULLISH INDICATOR</span>
+<span id="spot-stock-exchange" class="text-outline font-data-tabular">NSE: RELIANCE</span>
 </div>
 </div>
 <div class="h-10 w-[1px] bg-outline-variant mx-2"></div>
 <div class="space-y-1">
 <div class="text-outline font-label-caps">SPOT PRICE</div>
-<div class="font-data-tabular text-headline-md">₹2,945.35 <span class="text-tertiary text-body-sm">+1.45%</span></div>
+<div id="spot-stock-price-container" class="font-data-tabular text-headline-md">₹2,945.10 <span id="spot-stock-change" class="text-tertiary text-body-sm">+1.45%</span></div>
 </div>
 <div class="h-10 w-[1px] bg-outline-variant mx-2"></div>
 <div class="space-y-1">
 <div class="text-outline font-label-caps">24H VOLUME</div>
-<div class="font-data-tabular text-headline-md">14.2M</div>
+<div id="spot-stock-volume" class="font-data-tabular text-headline-md">4.8M</div>
 </div>
 </div>
 <div class="flex flex-col items-end">
@@ -353,7 +353,29 @@
 </div>
 </div>
 <div class="flex items-center gap-3">
-<select class="bg-background/40 border border-outline-variant text-body-sm font-label-caps rounded px-2 py-1 focus:ring-0">
+<select id="select-stock" onchange="switchOptionStock(this.value)" class="bg-background/40 border border-outline-variant text-body-sm font-label-caps rounded px-2 py-1 focus:ring-0 text-white font-bold cursor-pointer">
+<option value="RELIANCE">RELIANCE</option>
+<option value="HDFC BANK">HDFC BANK</option>
+<option value="TCS">TCS</option>
+<option value="INFY">INFY</option>
+<option value="ICICI BANK">ICICI BANK</option>
+<option value="SBIN">SBIN</option>
+<option value="L&T">L&T</option>
+<option value="BHARTI AIRTEL">BHARTI AIRTEL</option>
+<option value="ITC">ITC</option>
+<option value="KOTAK BANK">KOTAK BANK</option>
+<option value="AXIS BANK">AXIS BANK</option>
+<option value="TATA MOTORS">TATA MOTORS</option>
+<option value="HUL">HUL</option>
+<option value="BAJAJ FINANCE">BAJAJ FINANCE</option>
+<option value="MARUTI">MARUTI</option>
+<option value="SUN PHARMA">SUN PHARMA</option>
+<option value="TITAN">TITAN</option>
+<option value="TATA STEEL">TATA STEEL</option>
+<option value="M&M">M&M</option>
+<option value="NTPC">NTPC</option>
+</select>
+<select class="bg-background/40 border border-outline-variant text-body-sm font-label-caps rounded px-2 py-1 focus:ring-0 cursor-pointer">
 <option>28 MAR 2024</option>
 <option>04 APR 2024</option>
 <option>25 APR 2024</option>
@@ -635,33 +657,154 @@
     }
     
     // Option Chain Database
-    const optionChainData = {
-        'CALLS': [
-            { strike: 2900, type: 'CE (ITM)', ltp: 78.20, volume: '12,450', oi: '15.2', iv: '24.5', delta: '0.82', theta: '-12.5', class: 'text-tertiary', trClass: 'bg-tertiary-container/5' },
-            { strike: 2950, type: 'CE (ATM)', ltp: 42.50, volume: '84,120', oi: '42.8', iv: '22.1', delta: '0.50', theta: '-28.4', class: 'text-secondary', trClass: 'border-l-2 border-secondary-container bg-secondary-container/5' },
-            { strike: 3000, type: 'CE (OTM)', ltp: 21.15, volume: '52,300', oi: '31.5', iv: '28.9', delta: '0.24', theta: '-45.2', class: 'text-error', trClass: '' },
-            { strike: 3050, type: 'CE (OTM)', ltp: 12.10, volume: '18,900', oi: '12.4', iv: '34.2', delta: '0.12', theta: '-58.1', class: 'text-error', trClass: '' },
-            { strike: 3100, type: 'CE (OTM)', ltp: 5.40, volume: '4,200', oi: '5.8', iv: '41.0', delta: '0.05', theta: '-72.4', class: 'text-error opacity-50', trClass: '' },
-            { strike: 3150, type: 'CE (OTM)', ltp: 2.10, volume: '1,100', oi: '2.2', iv: '45.5', delta: '0.02', theta: '-89.1', class: 'text-error opacity-40', trClass: '' }
-        ],
-        'PUTS': [
-            { strike: 2900, type: 'PE (OTM)', ltp: 12.10, volume: '14,250', oi: '8.4', iv: '26.5', delta: '-0.15', theta: '-18.2', class: 'text-error opacity-50', trClass: '' },
-            { strike: 2950, type: 'PE (ATM)', ltp: 48.30, volume: '72,180', oi: '38.6', iv: '21.8', delta: '-0.52', theta: '-26.1', class: 'text-secondary', trClass: 'border-l-2 border-secondary-container bg-secondary-container/5' },
-            { strike: 3000, type: 'PE (ITM)', ltp: 82.50, volume: '8,420', oi: '14.1', iv: '23.4', delta: '-0.81', theta: '-12.4', class: 'text-tertiary', trClass: 'bg-tertiary-container/5' },
-            { strike: 3050, type: 'PE (ITM)', ltp: 124.00, volume: '2,100', oi: '4.8', iv: '25.1', delta: '-0.92', theta: '-6.5', class: 'text-tertiary', trClass: '' },
-            { strike: 3100, type: 'PE (ITM)', ltp: 172.40, volume: '850', oi: '2.1', iv: '28.0', delta: '-0.97', theta: '-2.3', class: 'text-tertiary', trClass: '' },
-            { strike: 3150, type: 'PE (ITM)', ltp: 221.10, volume: '120', oi: '0.5', iv: '31.2', delta: '-0.99', theta: '-0.8', class: 'text-tertiary', trClass: '' }
-        ]
+    const optionStockDatabase = {
+        'RELIANCE': { name: 'RELIANCE INDUSTRIES', exchange: 'NSE: RELIANCE', price: 2945.10, change: '+1.45%', isUp: true, vol: '4.8M', indicator: 'BULLISH INDICATOR' },
+        'HDFC BANK': { name: 'HDFC BANK LIMITED', exchange: 'NSE: HDFCBANK', price: 1422.35, change: '+1.45%', isUp: true, vol: '8.4M', indicator: 'STABLE TREND' },
+        'TCS': { name: 'TATA CONSULTANCY SERVICES', exchange: 'NSE: TCS', price: 3988.40, change: '+1.45%', isUp: true, vol: '2.1M', indicator: 'MEAN REVERSION' },
+        'INFY': { name: 'INFOSYS LIMITED', exchange: 'NSE: INFY', price: 496.93, change: '+1.45%', isUp: true, vol: '6.1M', indicator: 'STABLE TREND' },
+        'ICICI BANK': { name: 'ICICI BANK LIMITED', exchange: 'NSE: ICICIBANK', price: 2136.01, change: '+1.45%', isUp: true, vol: '4.1M', indicator: 'STABLE TREND' },
+        'SBIN': { name: 'STATE BANK OF INDIA', exchange: 'NSE: SBIN', price: 2396.75, change: '+1.45%', isUp: true, vol: '9.1M', indicator: 'BULLISH INDICATOR' },
+        'L&T': { name: 'LARSEN & TOUBRO LIMITED', exchange: 'NSE: LT', price: 1265.48, change: '+1.45%', isUp: true, vol: '1.9M', indicator: 'STABLE TREND' },
+        'BHARTI AIRTEL': { name: 'BHARTI AIRTEL LIMITED', exchange: 'NSE: BHARTIARTL', price: 336.55, change: '+1.45%', isUp: true, vol: '3.4M', indicator: 'STABLE TREND' },
+        'ITC': { name: 'ITC LIMITED', exchange: 'NSE: ITC', price: 422.10, change: '-0.35%', isUp: false, vol: '12.4M', indicator: 'RANGE BOUND' },
+        'KOTAK BANK': { name: 'KOTAK MAHINDRA BANK', exchange: 'NSE: KOTAKBANK', price: 1785.40, change: '+0.12%', isUp: true, vol: '2.1M', indicator: 'STABLE TREND' },
+        'AXIS BANK': { name: 'AXIS BANK LIMITED', exchange: 'NSE: AXISBANK', price: 1045.20, change: '-0.75%', isUp: false, vol: '4.8M', indicator: 'MEAN REVERSION' },
+        'TATA MOTORS': { name: 'TATA MOTORS LIMITED', exchange: 'NSE: TATAMOTORS', price: 924.50, change: '+2.40%', isUp: true, vol: '8.4M', indicator: 'BULLISH BREAKOUT' },
+        'HUL': { name: 'HINDUSTAN UNILEVER LTD', exchange: 'NSE: HINDUNILVR', price: 2410.15, change: '+0.15%', isUp: true, vol: '1.2M', indicator: 'MEAN REVERSION' },
+        'BAJAJ FINANCE': { name: 'BAJAJ FINANCE LIMITED', exchange: 'NSE: BAJFINANCE', price: 6850.00, change: '+1.45%', isUp: true, vol: '1.1M', indicator: 'STABLE TREND' },
+        'MARUTI': { name: 'MARUTI SUZUKI INDIA LTD', exchange: 'NSE: MARUTI', price: 11420.00, change: '+1.45%', isUp: true, vol: '0.85M', indicator: 'BULLISH BREAKOUT' },
+        'SUN PHARMA': { name: 'SUN PHARMACEUTICAL IND', exchange: 'NSE: SUNPHARMA', price: 1540.30, change: '+1.45%', isUp: true, vol: '1.4M', indicator: 'STABLE TREND' },
+        'TITAN': { name: 'TITAN COMPANY LIMITED', exchange: 'NSE: TITAN', price: 3620.00, change: '+1.45%', isUp: true, vol: '1.1M', indicator: 'STABLE TREND' },
+        'TATA STEEL': { name: 'TATA STEEL LIMITED', exchange: 'NSE: TATASTEEL', price: 152.40, change: '+1.45%', isUp: true, vol: '24.1M', indicator: 'STABLE TREND' },
+        'M&M': { name: 'MAHINDRA & MAHINDRA LTD', exchange: 'NSE: M&M', price: 2045.60, change: '+1.45%', isUp: true, vol: '2.4M', indicator: 'BULLISH BREAKOUT' },
+        'NTPC': { name: 'NTPC LIMITED', exchange: 'NSE: NTPC', price: 342.15, change: '+1.45%', isUp: true, vol: '8.9M', indicator: 'STABLE TREND' }
     };
 
+    let activeSymbol = 'RELIANCE';
     let activeOptionType = 'CALLS';
+
+    function generateOptionChain(symbol) {
+        const stock = optionStockDatabase[symbol];
+        const spotPrice = stock.price;
+        
+        let step = 50;
+        if (spotPrice > 3000) step = 100;
+        else if (spotPrice < 400) step = 10;
+        else if (spotPrice < 1000) step = 20;
+
+        const atmStrike = Math.round(spotPrice / step) * step;
+        const strikes = [
+            atmStrike - 2 * step,
+            atmStrike - step,
+            atmStrike,
+            atmStrike + step,
+            atmStrike + 2 * step,
+            atmStrike + 3 * step
+        ];
+
+        const calls = [];
+        const puts = [];
+
+        strikes.forEach((strike, idx) => {
+            // CALLS (CE)
+            let ceType = 'CE (OTM)';
+            let ceClass = 'text-error';
+            let ceTrClass = '';
+            if (strike < spotPrice) {
+                ceType = 'CE (ITM)';
+                ceClass = 'text-tertiary';
+                ceTrClass = 'bg-tertiary-container/5';
+            } else if (strike === atmStrike) {
+                ceType = 'CE (ATM)';
+                ceClass = 'text-secondary';
+                ceTrClass = 'border-l-2 border-secondary-container bg-secondary-container/5';
+            }
+            if (idx === 4) ceClass += ' opacity-50';
+            if (idx === 5) ceClass += ' opacity-40';
+
+            // LTP Formula (Realistic pricing relative to intrinsic value + time decay)
+            let ceLtp = 0;
+            if (strike < spotPrice) {
+                ceLtp = (spotPrice - strike) + (5 + (strike % 7));
+            } else if (strike === atmStrike) {
+                ceLtp = 18.5 + (strike % 5);
+            } else {
+                ceLtp = Math.max(1.2, (spotPrice / strike) * (5 - (strike - spotPrice) / step));
+            }
+
+            // Delta
+            let ceDelta = 0.50;
+            if (strike < spotPrice) ceDelta = Math.min(0.99, 0.6 + (spotPrice - strike)/step * 0.15);
+            else if (strike > spotPrice) ceDelta = Math.max(0.02, 0.4 - (strike - spotPrice)/step * 0.12);
+
+            calls.push({
+                strike,
+                type: ceType,
+                ltp: ceLtp,
+                volume: Math.floor(10000 + (strike % 9) * 15000).toLocaleString(),
+                oi: (10 + (strike % 13) * 3).toFixed(1),
+                iv: (18 + (strike % 11)).toFixed(1),
+                delta: ceDelta.toFixed(2),
+                theta: (-(12 + (strike % 17) * 3)).toFixed(1),
+                class: ceClass,
+                trClass: ceTrClass
+            });
+
+            // PUTS (PE)
+            let peType = 'PE (OTM)';
+            let peClass = 'text-error';
+            let peTrClass = '';
+            if (strike > spotPrice) {
+                peType = 'PE (ITM)';
+                peClass = 'text-tertiary';
+                peTrClass = 'bg-tertiary-container/5';
+            } else if (strike === atmStrike) {
+                peType = 'PE (ATM)';
+                peClass = 'text-secondary';
+                peTrClass = 'border-l-2 border-secondary-container bg-secondary-container/5';
+            }
+            if (idx === 0) peClass += ' opacity-40';
+            if (idx === 1) peClass += ' opacity-50';
+
+            // LTP Formula
+            let peLtp = 0;
+            if (strike > spotPrice) {
+                peLtp = (strike - spotPrice) + (5 + (strike % 7));
+            } else if (strike === atmStrike) {
+                peLtp = 18.5 + (strike % 5);
+            } else {
+                peLtp = Math.max(1.2, (strike / spotPrice) * (5 - (spotPrice - strike) / step));
+            }
+
+            // Delta
+            let peDelta = -0.50;
+            if (strike > spotPrice) peDelta = Math.max(-0.99, -0.6 - (strike - spotPrice)/step * 0.15);
+            else if (strike < spotPrice) peDelta = Math.min(-0.02, -0.4 + (spotPrice - strike)/step * 0.12);
+
+            puts.push({
+                strike,
+                type: peType,
+                ltp: peLtp,
+                volume: Math.floor(10000 + (strike % 9) * 15000).toLocaleString(),
+                oi: (10 + (strike % 13) * 3).toFixed(1),
+                iv: (18 + (strike % 11)).toFixed(1),
+                delta: peDelta.toFixed(2),
+                theta: (-(12 + (strike % 17) * 3)).toFixed(1),
+                class: peClass,
+                trClass: peTrClass
+            });
+        });
+
+        return { 'CALLS': calls, 'PUTS': puts };
+    }
 
     function renderOptionsChain(type) {
         const tbody = document.getElementById('options-chain-tbody');
         if(!tbody) return;
         
         tbody.innerHTML = '';
-        const rows = optionChainData[type];
+        const chainData = generateOptionChain(activeSymbol);
+        const rows = chainData[type];
         
         rows.forEach(r => {
             const tr = document.createElement('tr');
@@ -676,7 +819,7 @@
                 <td class="px-4 py-2 font-data-tabular ${type === 'CALLS' ? 'text-tertiary' : 'text-error'}">${r.delta}</td>
                 <td class="px-4 py-2 font-data-tabular text-error">${r.theta}</td>
                 <td class="px-4 py-2">
-                    <button onclick="showToast('Order Placed ${r.type.split(' ')[0]} Strike ' + ${r.strike} + ' Successfully!')" class="${type === 'CALLS' ? 'text-tertiary' : 'text-error'} font-label-caps hover:underline">TRADE</button>
+                    <button onclick="showToast('Order Placed ' + '${type === 'CALLS' ? 'CE' : 'PE'}' + ' Strike ' + ${r.strike} + ' Successfully!')" class="${type === 'CALLS' ? 'text-tertiary' : 'text-error'} font-label-caps hover:underline">TRADE</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -695,6 +838,31 @@
             btnPuts.className = 'px-3 py-1 font-label-caps text-error bg-surface-variant/40 rounded transition-all';
             btnCalls.className = 'px-3 py-1 font-label-caps text-on-surface-variant hover:text-on-surface rounded transition-all';
         }
+        renderOptionsChain(activeOptionType);
+    }
+
+    function switchOptionStock(symbol) {
+        activeSymbol = symbol;
+        const stock = optionStockDatabase[symbol];
+        
+        // Update DOM headers
+        document.getElementById('spot-stock-title').textContent = stock.name;
+        document.getElementById('spot-stock-exchange').textContent = stock.exchange;
+        
+        const priceEl = document.getElementById('spot-stock-price-container');
+        priceEl.innerHTML = `₹${stock.price.toLocaleString('en-US', {minimumFractionDigits: 2})} <span id="spot-stock-change" class="${stock.isUp ? 'text-tertiary' : 'text-error'} text-body-sm">${stock.change}</span>`;
+        
+        const indicatorEl = document.getElementById('spot-stock-indicator');
+        indicatorEl.textContent = stock.indicator;
+        if(stock.isUp) {
+            indicatorEl.className = 'bg-tertiary-container/40 text-tertiary px-2 py-0.5 rounded font-label-caps backdrop-blur-sm';
+        } else {
+            indicatorEl.className = 'bg-error-container/20 text-error px-2 py-0.5 rounded font-label-caps backdrop-blur-sm';
+        }
+        
+        document.getElementById('spot-stock-volume').textContent = stock.vol;
+        
+        // Redraw
         renderOptionsChain(activeOptionType);
     }
 
