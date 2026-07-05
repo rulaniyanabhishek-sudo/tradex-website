@@ -1,3 +1,21 @@
+// 3D Shiny Sky Blue Watermark (Top Left)
+(function() {
+    const watermark = document.createElement('div');
+    watermark.style.cssText = "position: fixed; top: 12px; left: 24px; z-index: 999998; font-family: 'Roboto Mono', monospace; font-size: 8px; font-weight: 800; color: #80d8ff; letter-spacing: 0.15em; text-transform: uppercase; pointer-events: none; opacity: 0.9; text-shadow: 1px 1px 0px #0056b3, 2px 2px 0px #002b5c, 0 0 8px rgba(128, 216, 255, 0.7); display: flex; align-items: center; gap: 5px;";
+    watermark.innerHTML = `
+        <span style="width: 5px; height: 5px; border-radius: 50%; background-color: #80d8ff; box-shadow: 0 0 6px #80d8ff; display: inline-block;"></span>
+        MADE BY ABHISHEK RULANIYA
+    `;
+    
+    if (document.body) {
+        document.body.appendChild(watermark);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.appendChild(watermark);
+        });
+    }
+})();
+
 // 3D Visual Credit Splash Screen (Global Page Entry)
 (function() {
     // Inject Custom Keyframe Animations
