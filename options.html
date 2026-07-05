@@ -179,7 +179,9 @@
 </nav>
 <div class="flex flex-1 overflow-hidden relative z-10">
 <!-- SideNavBar -->
-<aside class="hidden md:flex flex-col h-full border-r border-outline-variant bg-surface-container-low/40 backdrop-blur-lg w-64 shrink-0">
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden" onclick="toggleMobileSidebar()"></div>
+<!-- Sidebar Navigation -->
+<aside id="main-sidebar" class="fixed inset-y-0 left-0 z-40 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 flex flex-col h-full border-r border-outline-variant bg-surface-container-low/40 backdrop-blur-lg w-64 shrink-0">
 <div class="p-4 border-b border-outline-variant flex items-center gap-3">
 <div class="w-10 h-10 rounded bg-primary-container/40 flex items-center justify-center border border-outline-variant">
 <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_circle</span>
@@ -384,7 +386,7 @@
 </div>
 </div>
 <div class="overflow-x-auto flex-1">
-<table class="w-full text-left border-collapse">
+<div class="overflow-x-auto w-full"><table class="w-full text-left border-collapse">
 <thead>
 <tr class="bg-surface-container/30 border-b border-outline-variant">
 <th class="px-4 py-2 font-label-caps text-outline text-[10px]">STRIKE</th>
@@ -399,7 +401,7 @@
 </tr>
 </thead>
 <tbody id="options-chain-tbody" class="divide-y divide-outline-variant"></tbody>
-</table>
+</table></div>
 </div>
 <div class="p-2 bg-surface-container-lowest/40 border-t border-outline-variant flex justify-between items-center text-[10px] text-outline font-label-caps backdrop-blur-md">
 <div>DISPLAYING MARCH 28 EXPIRY | DATA UPDATED 1S AGO</div>
@@ -412,7 +414,7 @@
 </div>
 </div>
 <!-- Contextual Insights Section -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-widget-gap">
+<div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 gap-widget-gap">
 <div class="glass-card p-4 rounded bg-gradient-to-br from-surface-container-low/40 to-background/40">
 <h4 class="font-label-caps text-tertiary mb-2">PROBABILITY OF PROFIT (POP)</h4>
 <div class="flex items-end gap-4 h-24">

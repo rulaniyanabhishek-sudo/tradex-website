@@ -206,7 +206,9 @@
 </nav>
 <div class="flex flex-1 overflow-hidden z-10">
 <!-- SideNavBar -->
-<aside class="hidden md:flex flex-col h-full w-64 border-r border-outline-variant bg-surface-container-low/60 backdrop-blur-lg">
+<div id="mobile-sidebar-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 hidden md:hidden" onclick="toggleMobileSidebar()"></div>
+<!-- Sidebar Navigation -->
+<aside id="main-sidebar" class="fixed inset-y-0 left-0 z-40 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 flex flex-col h-full w-64 border-r border-outline-variant bg-surface-container-low/60 backdrop-blur-lg">
 <div class="p-4 border-b border-outline-variant">
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden">
@@ -297,7 +299,7 @@
 <!-- Scanner Data Table -->
 <section class="glass-panel rounded-lg flex-1 overflow-hidden flex flex-col">
 <div class="overflow-x-auto scanner-table-container">
-<table class="w-full text-left border-collapse min-w-[1200px]">
+<div class="overflow-x-auto w-full"><table class="w-full text-left border-collapse min-w-[1200px]">
 <thead class="sticky top-0 bg-surface-container-high/80 backdrop-blur-md z-10">
 <tr class="border-b border-outline-variant/40">
 <th class="p-3 font-label-caps text-[10px] text-outline">SYMBOL</th>
@@ -433,7 +435,7 @@
                                 }
                             </script>
 </tbody>
-</table>
+</table></div>
 </div>
 <!-- Table Footer/Pagination -->
 <div class="p-2 border-t border-outline-variant/40 bg-surface-container-high/60 backdrop-blur-md flex items-center justify-between">
@@ -459,7 +461,7 @@
 </div>
 </section>
 <!-- Bottom Detail Panel (Bento Style) -->
-<section class="grid grid-cols-1 md:grid-cols-3 gap-widget-gap h-48">
+<section class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-3 gap-widget-gap h-48">
 <!-- Detail 1: Setup Statistics -->
 <div class="glass-panel rounded-lg p-3 flex flex-col justify-between">
 <div class="flex justify-between items-start">

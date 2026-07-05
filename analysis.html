@@ -313,7 +313,7 @@
 </div>
 <div class="flex-1 overflow-y-auto custom-scrollbar">
 <!-- Watchlist Header -->
-<div class="grid grid-cols-3 px-4 py-2 border-b border-outline-variant/50 text-[10px] font-label-caps text-outline bg-surface-container-lowest/20 sticky top-0 backdrop-blur-md">
+<div class="grid grid-cols-1 md:grid-cols-3 px-4 py-2 border-b border-outline-variant/50 text-[10px] font-label-caps text-outline bg-surface-container-lowest/20 sticky top-0 backdrop-blur-md">
 <span>SYMBOL</span>
 <span class="text-right">PRICE</span>
 <span class="text-right">CHG %</span>
@@ -344,7 +344,7 @@
 <span id="stock-price-change" class="text-tertiary font-data-tabular font-bold text-lg drop-shadow-[0_0_8px_rgba(102,253,172,0.4)]">+42.05 (+1.45%)</span>
 </div>
 </div>
-<div class="grid grid-cols-4 gap-x-8 gap-y-1 pb-1">
+<div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-1 pb-1">
 <div class="flex flex-col">
 <span class="text-[9px] text-outline font-label-caps uppercase tracking-widest">Day High</span>
 <span id="stock-high" class="text-sm font-data-tabular text-on-surface-variant">2,968.00</span>
@@ -437,7 +437,7 @@
 </div>
 </div>
 <!-- Bottom Analysis Panel -->
-<div class="h-52 grid grid-cols-3 gap-0 border-t border-outline-variant bg-surface-container-lowest/60 backdrop-blur-2xl relative z-20">
+<div class="h-52 grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-outline-variant bg-surface-container-lowest/60 backdrop-blur-2xl relative z-20">
 <!-- Candlestick Analysis -->
 <div class="p-5 border-r border-outline-variant">
 <div class="flex items-center justify-between mb-4">
@@ -472,7 +472,7 @@
 <h3 class="font-label-caps text-[11px] text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
 <span class="material-symbols-outlined text-[14px]">view_timeline</span> MTF Matrix
 </h3>
-<div id="mtf-matrix-container" class="grid grid-cols-4 gap-2.5">
+<div id="mtf-matrix-container" class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2.5">
 <!-- Dynamic MTF matrix boxes injected here -->
 </div>
 </div>
@@ -559,7 +559,7 @@
 <!-- Targets -->
 <div class="border-l-2 border-tertiary pl-4 py-2.5 bg-gradient-to-r from-tertiary/10 to-transparent rounded-r-lg">
 <p class="text-[9px] text-tertiary font-label-caps tracking-widest mb-1">TAKE PROFIT NODES</p>
-<div class="grid grid-cols-3 gap-2 mt-1.5">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-1.5">
 <div>
 <p class="text-[9px] text-outline font-data-tabular">TP1 (30%)</p>
 <p class="text-[11px] font-bold text-on-surface font-data-tabular">2,985</p>
@@ -1216,7 +1216,7 @@ void main() {
             const isActive = sym === activeSymbol;
             
             const div = document.createElement('div');
-            div.className = `grid grid-cols-3 px-4 py-3 cursor-pointer transition-all ${isActive ? 'stock-item-active' : 'hover:bg-white/5 border-l-2 border-transparent'}`;
+            div.className = `grid grid-cols-1 md:grid-cols-3 px-4 py-3 cursor-pointer transition-all ${isActive ? 'stock-item-active' : 'hover:bg-white/5 border-l-2 border-transparent'}`;
             div.onclick = () => selectStock(sym);
             
             div.innerHTML = `
