@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TradeX Terminal - Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@500;700&amp;family=Roboto+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(30, 30, 30, 0.4);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .market-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        body {
+            background-color: #000;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#c5c6ca",
+                      "secondary-container": "#4b8eff",
+                      "inverse-surface": "#e5e2e1",
+                      "error": "#ffb4ab",
+                      "surface-tint": "#c5c6cb",
+                      "tertiary-fixed-dim": "#44e092",
+                      "surface-container-low": "rgba(28, 27, 28, 0.6)",
+                      "secondary": "#adc6ff",
+                      "on-secondary-fixed-variant": "#004493",
+                      "on-surface": "#e5e2e1",
+                      "surface-container-lowest": "rgba(14, 14, 14, 0.8)",
+                      "tertiary-container": "#001106",
+                      "on-primary-fixed-variant": "#44474b",
+                      "primary-fixed": "#e1e2e7",
+                      "on-error": "#690005",
+                      "on-primary": "#2e3134",
+                      "inverse-primary": "#5c5f62",
+                      "primary": "#c5c6cb",
+                      "background": "transparent",
+                      "on-secondary-container": "#00285c",
+                      "surface-bright": "#3a3939",
+                      "on-secondary": "#002e69",
+                      "on-primary-container": "#797b7f",
+                      "tertiary-fixed": "#66fdac",
+                      "surface-container": "rgba(32, 31, 32, 0.5)",
+                      "on-tertiary-fixed": "#002110",
+                      "secondary-fixed-dim": "#adc6ff",
+                      "secondary-fixed": "#d8e2ff",
+                      "on-tertiary-fixed-variant": "#00522f",
+                      "outline-variant": "rgba(255,255,255,0.1)",
+                      "primary-fixed-dim": "#c5c6cb",
+                      "inverse-on-surface": "#313030",
+                      "on-tertiary": "#00391f",
+                      "tertiary": "#66fdac",
+                      "on-tertiary-container": "#008d55",
+                      "surface-variant": "rgba(53, 52, 53, 0.5)",
+                      "error-container": "#93000a",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-high": "rgba(42, 42, 42, 0.6)",
+                      "on-primary-fixed": "#191c1f",
+                      "surface-container-highest": "rgba(53, 52, 53, 0.7)",
+                      "surface-dim": "#131313",
+                      "on-secondary-fixed": "#001a41",
+                      "on-background": "#e5e2e1",
+                      "primary-container": "rgba(11, 14, 17, 0.5)",
+                      "outline": "rgba(255,255,255,0.2)",
+                      "surface": "rgba(19, 19, 19, 0.4)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "margin-lg": "24px",
+                      "margin-sm": "4px",
+                      "container-padding": "24px",
+                      "input-height": "48px",
+                      "margin-md": "12px",
+                      "table-row-height": "32px",
+                      "widget-gap": "16px"
+              },
+              "fontFamily": {
+                      "body-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "data-tabular": ["Roboto Mono"]
+              },
+              "fontSize": {
+                      "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-caps": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "data-tabular": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="flex h-screen overflow-hidden text-on-surface">
+<!-- 3D and Shader Backgrounds -->
+<canvas class="fixed inset-0 w-full h-full -z-20" id="shader-canvas"></canvas>
+<div class="fixed inset-0 w-full h-full -z-10 pointer-events-none" id="threejs-container"></div>
+<!-- Sidebar Navigation -->
+<aside class="flex flex-col h-full border-r border-outline-variant bg-surface-container-low backdrop-blur-2xl hidden md:flex w-64 shrink-0">
+<div class="p-container-padding">
+<h1 class="font-headline-md text-headline-md text-primary mb-8 tracking-wider cursor-pointer" onclick="window.location.href='index.html'">TRADEX</h1>
+<div class="flex items-center gap-3 mb-8 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md">
+<div class="w-10 h-10 rounded-lg bg-tertiary/20 flex items-center justify-center border border-tertiary/30 shadow-[0_0_15px_rgba(102,253,172,0.15)]">
+<span class="material-symbols-outlined text-tertiary">account_circle</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-white">Pro Trader</div>
+<div class="font-body-sm text-[10px] text-tertiary mt-0.5">Verified Account</div>
+</div>
+</div>
+<button class="w-full bg-secondary text-on-secondary-fixed font-label-caps py-3 rounded-lg mb-8 active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(173,198,255,0.2)] hover:shadow-[0_0_25px_rgba(173,198,255,0.4)]">
+                NEW TRADE
+            </button>
+<nav class="space-y-2">
+<!-- Active Item -->
+<div class="bg-secondary/10 text-secondary border-l-2 border-secondary px-4 py-3 flex items-center gap-3 cursor-pointer rounded-r-lg backdrop-blur-sm" onclick="window.location.href='analysis.html'">
+<span class="material-symbols-outlined">show_chart</span>
+<span class="font-label-caps text-label-caps">NIFTY 50</span>
+</div>
+<!-- Inactive Items -->
+<div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='analysis.html'">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps">SENSEX</span>
+</div>
+<div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='analysis.html'">
+<span class="material-symbols-outlined">star</span>
+<span class="font-label-caps text-label-caps">Favourites</span>
+</div>
+<div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='index.html'">
+<span class="material-symbols-outlined">language</span>
+<span class="font-label-caps text-label-caps">Indices</span>
+</div>
+<div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='index.html'">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-label-caps text-label-caps">Alerts</span>
+</div>
+</nav>
+</div>
+<div class="mt-auto p-container-padding border-t border-outline-variant bg-white/5">
+<div class="text-on-surface-variant px-4 py-2 flex items-center gap-3 hover:text-white transition-all cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</div>
+<div class="text-on-surface-variant px-4 py-2 flex items-center gap-3 hover:text-white transition-all cursor-pointer mt-2">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps">Support</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-transparent overflow-hidden relative">
+<!-- Top App Bar (Ticker) -->
+<header class="flex items-center justify-between px-6 py-2 bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant shrink-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary text-sm market-pulse drop-shadow-[0_0_5px_rgba(102,253,172,0.8)]">sensors</span>
+<span class="font-data-tabular text-[12px] text-tertiary tracking-wider">NIFTY: 22,450.20 (+1.2%) <span class="text-on-surface-variant mx-2">|</span> SENSEX: 74,120.45 (+0.8%) <span class="text-on-surface-variant mx-2">|</span> VIX: 12.4 (-2.1%)</span>
+</div>
+<div class="flex items-center gap-6">
+<span class="font-label-caps text-[9px] text-tertiary border border-tertiary/30 px-2 py-1 rounded bg-tertiary/10">LIVE DATA STREAM</span>
+<div class="flex items-center gap-3">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors text-sm">refresh</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-white transition-colors text-sm">more_vert</button>
+</div>
+</div>
+</header>
+<!-- Top Navigation -->
+<nav class="flex justify-between items-center w-full px-container-padding h-16 border-b border-outline-variant bg-surface-container/30 backdrop-blur-xl shrink-0">
+<div class="flex items-center gap-10">
+<span class="font-display-lg text-2xl font-black text-white tracking-tighter drop-shadow-lg cursor-pointer" onclick="window.location.href='index.html'">TRADEX <span class="text-tertiary">TERMINAL</span></span>
+<div class="hidden lg:flex items-center gap-8">
+<a class="text-tertiary border-b-2 border-tertiary pb-1 font-label-caps text-label-caps drop-shadow-[0_0_8px_rgba(102,253,172,0.4)]" href="index.html">HOME</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-white transition-colors" href="scanner.html">LIVE SCANNER</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-white transition-colors" href="analysis.html">STOCK ANALYSIS</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-white transition-colors" href="options.html">OPTIONS ANALYSIS</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-white transition-colors" href="journal.html">TRADE JOURNAL</a>
+</div>
+</div>
+<div class="flex items-center gap-5">
+<button class="material-symbols-outlined text-on-surface hover:text-tertiary transition-colors drop-shadow-md">notifications</button>
+<button class="material-symbols-outlined text-on-surface hover:text-tertiary transition-colors drop-shadow-md">settings</button>
+<button class="material-symbols-outlined text-on-surface hover:text-tertiary transition-colors drop-shadow-md">account_circle</button>
+</div>
+</nav>
+<!-- Scrollable Canvas -->
+<section class="flex-1 overflow-y-auto p-container-padding space-y-widget-gap custom-scrollbar relative z-10">
+<!-- Market Status Header Area -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-widget-gap">
+<!-- Large Market Regime Card -->
+<div class="md:col-span-8 glass-panel rounded-2xl p-8 relative overflow-hidden group hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] transition-all duration-500">
+<div class="absolute inset-0 bg-gradient-to-br from-tertiary/10 to-transparent opacity-50 pointer-events-none"></div>
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse shadow-[0_0_10px_rgba(102,253,172,1)]"></div>
+<span class="font-label-caps text-[10px] text-tertiary uppercase tracking-[0.2em]">Market Regime</span>
+</div>
+<h2 class="font-display-lg text-4xl text-white mt-1 drop-shadow-lg">BULLISH CONFIRMED</h2>
+</div>
+<div class="text-right bg-black/40 p-3 rounded-xl border border-white/5 backdrop-blur-md">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Market Breadth</span>
+<div class="font-data-tabular text-xl text-tertiary mt-1">42 Adv / 8 Dec</div>
+</div>
+</div>
+<p class="font-body-md text-[15px] text-on-surface-variant max-w-2xl leading-relaxed border-l-2 border-tertiary/50 pl-4 py-1">
+                            Primary indices are holding above the 20-day EMA with strong participation from Financials and IT. Volatility remains compressed, favoring breakout strategies and trend-following setups.
+                        </p>
+<div class="flex gap-4 mt-8">
+<div class="bg-black/40 border border-white/5 px-4 py-3 rounded-xl backdrop-blur-md flex-1">
+<div class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-1">Nifty 50 Trend</div>
+<div class="font-data-tabular text-tertiary text-lg">+1.24% • Strong</div>
+</div>
+<div class="bg-black/40 border border-white/5 px-4 py-3 rounded-xl backdrop-blur-md flex-1">
+<div class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-1">VIX Status</div>
+<div class="font-data-tabular text-white text-lg">12.4 • Low Risk</div>
+</div>
+<div class="bg-black/40 border border-white/5 px-4 py-3 rounded-xl backdrop-blur-md flex-1">
+<div class="font-label-caps text-[10px] text-on-surface-variant uppercase mb-1">Regime Age</div>
+<div class="font-data-tabular text-white text-lg">14 Days</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Conditions Card -->
+<div class="md:col-span-4 glass-panel rounded-2xl p-8 flex flex-col hover:-translate-y-1 hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] transition-all duration-500">
+<div class="font-label-caps text-[12px] text-white mb-6 flex items-center gap-2 border-b border-white/10 pb-4">
+<span class="material-symbols-outlined text-tertiary text-lg">tune</span>
+                        TRADING CONDITIONS
+                    </div>
+<div class="space-y-5 flex-1">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-sm text-on-surface-variant">Intraday Scalping</span>
+<span class="px-3 py-1 bg-tertiary/20 border border-tertiary/50 text-tertiary font-label-caps text-[10px] rounded-full shadow-[0_0_10px_rgba(102,253,172,0.2)]">OPTIMAL</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-sm text-on-surface-variant">Options Buying</span>
+<span class="px-3 py-1 bg-white/10 border border-white/20 text-white font-label-caps text-[10px] rounded-full">NEUTRAL</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-sm text-on-surface-variant">Breakout Quality</span>
+<span class="px-3 py-1 bg-tertiary/20 border border-tertiary/50 text-tertiary font-label-caps text-[10px] rounded-full shadow-[0_0_10px_rgba(102,253,172,0.2)]">HIGH</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-sm text-on-surface-variant">Gap Trading</span>
+<span class="px-3 py-1 bg-error/20 border border-error/50 text-error font-label-caps text-[10px] rounded-full shadow-[0_0_10px_rgba(255,180,171,0.2)]">AVOID</span>
+</div>
+</div>
+<div class="mt-6 pt-4 border-t border-white/10 italic font-body-sm text-tertiary/80 text-sm">
+                        "Focus on high-volume pullbacks to VWAP."
+                    </div>
+</div>
+</div>
+<!-- Top Setups Section -->
+<div class="pt-6">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-4">
+<h3 class="font-display-lg text-2xl text-white drop-shadow-md">TOP SETUPS NOW</h3>
+<span class="bg-secondary/20 border border-secondary/30 text-secondary font-label-caps px-3 py-1.5 rounded-full text-[10px] shadow-[0_0_10px_rgba(173,198,255,0.2)]">8 OPPORTUNITIES</span>
+</div>
+<div class="flex gap-2">
+<button class="bg-white/10 border border-white/20 p-2 rounded-lg material-symbols-outlined text-white hover:bg-white/20 transition-all">grid_view</button>
+<button class="bg-transparent border border-transparent p-2 rounded-lg material-symbols-outlined text-on-surface-variant hover:text-white transition-all">list</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Setup Card 1 -->
+<div onclick="window.location.href='analysis.html?symbol=RELIANCE'" class="glass-panel rounded-xl p-5 hover:border-tertiary/50 hover:-translate-y-2 hover:shadow-[0_15px_30px_-5px_rgba(102,253,172,0.15)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-tertiary/10 blur-2xl rounded-full group-hover:bg-tertiary/30 transition-all"></div>
+<div class="flex justify-between items-start mb-5 relative z-10">
+<div>
+<h4 class="font-display-lg text-xl text-white">RELIANCE</h4>
+<span class="font-label-caps text-[10px] text-tertiary mt-1 block">LONG</span>
+</div>
+<span class="bg-tertiary border border-tertiary text-[#002110] font-label-caps px-2.5 py-1 rounded text-[10px] shadow-[0_0_10px_rgba(102,253,172,0.4)]">TRIGGERED</span>
+</div>
+<div class="space-y-4 flex-1 relative z-10">
+<div class="flex justify-between text-on-surface-variant border-b border-white/10 pb-3">
+<span class="font-body-sm text-sm">Setup</span>
+<span class="font-label-caps text-[11px] text-white">Breakout Retest</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">Entry</div>
+<div class="font-data-tabular text-white">2,945.50</div>
+</div>
+<div class="bg-tertiary/10 p-2 rounded-lg border border-tertiary/20">
+<div class="font-label-caps text-[9px] text-tertiary uppercase mb-1">Target</div>
+<div class="font-data-tabular text-tertiary">3,120.00</div>
+</div>
+<div class="bg-error/10 p-2 rounded-lg border border-error/20">
+<div class="font-label-caps text-[9px] text-error uppercase mb-1">Stop Loss</div>
+<div class="font-data-tabular text-error">2,910.00</div>
+</div>
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">R:R Ratio</div>
+<div class="font-data-tabular text-white">1 : 4.8</div>
+</div>
+</div>
+</div>
+<button onclick="event.stopPropagation(); window.location.href='analysis.html?symbol=RELIANCE';" class="w-full mt-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 text-white font-label-caps text-[11px] rounded-lg transition-all relative z-10">VIEW FULL ANALYSIS</button>
+</div>
+<!-- Setup Card 2 -->
+<div onclick="window.location.href='analysis.html?symbol=HDFCBANK'" class="glass-panel rounded-xl p-5 hover:border-secondary/50 hover:-translate-y-2 hover:shadow-[0_15px_30px_-5px_rgba(173,198,255,0.15)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group border-l-4 border-l-secondary">
+<div class="absolute top-0 right-0 w-16 h-16 bg-secondary/10 blur-2xl rounded-full group-hover:bg-secondary/20 transition-all"></div>
+<div class="flex justify-between items-start mb-5 relative z-10">
+<div>
+<h4 class="font-display-lg text-xl text-white">HDFCBANK</h4>
+<span class="font-label-caps text-[10px] text-on-surface-variant mt-1 block">LONG</span>
+</div>
+<span class="bg-surface-variant border border-white/20 text-white font-label-caps px-2.5 py-1 rounded text-[10px]">WAITING</span>
+</div>
+<div class="space-y-4 flex-1 relative z-10">
+<div class="flex justify-between text-on-surface-variant border-b border-white/10 pb-3">
+<span class="font-body-sm text-sm">Setup</span>
+<span class="font-label-caps text-[11px] text-white">Bullish Pennant</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">Entry</div>
+<div class="font-data-tabular text-white">1,452.00</div>
+</div>
+<div class="bg-tertiary/10 p-2 rounded-lg border border-tertiary/20">
+<div class="font-label-caps text-[9px] text-tertiary uppercase mb-1">Target</div>
+<div class="font-data-tabular text-tertiary">1,540.00</div>
+</div>
+<div class="bg-error/10 p-2 rounded-lg border border-error/20">
+<div class="font-label-caps text-[9px] text-error uppercase mb-1">Stop Loss</div>
+<div class="font-data-tabular text-error">1,438.00</div>
+</div>
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">R:R Ratio</div>
+<div class="font-data-tabular text-white">1 : 6.2</div>
+</div>
+</div>
+</div>
+<button onclick="event.stopPropagation(); window.location.href='analysis.html?symbol=RELIANCE';" class="w-full mt-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 text-white font-label-caps text-[11px] rounded-lg transition-all relative z-10">VIEW FULL ANALYSIS</button>
+</div>
+<!-- Setup Card 3 -->
+<div class="glass-panel rounded-xl p-5 hover:border-error/50 hover:-translate-y-2 hover:shadow-[0_15px_30px_-5px_rgba(255,180,171,0.15)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-error/10 blur-2xl rounded-full group-hover:bg-error/30 transition-all"></div>
+<div class="flex justify-between items-start mb-5 relative z-10">
+<div>
+<h4 class="font-display-lg text-xl text-white">TCS</h4>
+<span class="font-label-caps text-[10px] text-error mt-1 block">SHORT</span>
+</div>
+<span class="bg-error border border-error text-[#690005] font-label-caps px-2.5 py-1 rounded text-[10px] shadow-[0_0_10px_rgba(255,180,171,0.4)]">ACTIVE</span>
+</div>
+<div class="space-y-4 flex-1 relative z-10">
+<div class="flex justify-between text-on-surface-variant border-b border-white/10 pb-3">
+<span class="font-body-sm text-sm">Setup</span>
+<span class="font-label-caps text-[11px] text-white">Mean Reversion</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">Entry</div>
+<div class="font-data-tabular text-white">4,120.00</div>
+</div>
+<div class="bg-tertiary/10 p-2 rounded-lg border border-tertiary/20">
+<div class="font-label-caps text-[9px] text-tertiary uppercase mb-1">Target</div>
+<div class="font-data-tabular text-tertiary">3,850.00</div>
+</div>
+<div class="bg-error/10 p-2 rounded-lg border border-error/20">
+<div class="font-label-caps text-[9px] text-error uppercase mb-1">Stop Loss</div>
+<div class="font-data-tabular text-error">4,195.00</div>
+</div>
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">R:R Ratio</div>
+<div class="font-data-tabular text-white">1 : 3.6</div>
+</div>
+</div>
+</div>
+<button onclick="event.stopPropagation(); window.location.href=\'analysis.html\?symbol=RELIANCE\';" class="w-full mt-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 text-white font-label-caps text-[11px] rounded-lg transition-all relative z-10">VIEW FULL ANALYSIS</button>
+</div>
+<!-- Setup Card 4 -->
+<div onclick="window.location.href='analysis.html?symbol=INFY'" class="glass-panel rounded-xl p-5 hover:border-secondary/50 hover:-translate-y-2 hover:shadow-[0_15px_30px_-5px_rgba(173,198,255,0.15)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-secondary/10 blur-2xl rounded-full group-hover:bg-secondary/20 transition-all"></div>
+<div class="flex justify-between items-start mb-5 relative z-10">
+<div>
+<h4 class="font-display-lg text-xl text-white">INFY</h4>
+<span class="font-label-caps text-[10px] text-tertiary mt-1 block">LONG</span>
+</div>
+<span class="bg-secondary/20 border border-secondary/30 text-secondary font-label-caps px-2.5 py-1 rounded text-[10px]">LATE-STAGE</span>
+</div>
+<div class="space-y-4 flex-1 relative z-10">
+<div class="flex justify-between text-on-surface-variant border-b border-white/10 pb-3">
+<span class="font-body-sm text-sm">Setup</span>
+<span class="font-label-caps text-[11px] text-white">Cup &amp; Handle</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">Entry</div>
+<div class="font-data-tabular text-white">1,620.00</div>
+</div>
+<div class="bg-tertiary/10 p-2 rounded-lg border border-tertiary/20">
+<div class="font-label-caps text-[9px] text-tertiary uppercase mb-1">Target</div>
+<div class="font-data-tabular text-tertiary">1,840.00</div>
+</div>
+<div class="bg-error/10 p-2 rounded-lg border border-error/20">
+<div class="font-label-caps text-[9px] text-error uppercase mb-1">Stop Loss</div>
+<div class="font-data-tabular text-error">1,590.00</div>
+</div>
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">R:R Ratio</div>
+<div class="font-data-tabular text-white">1 : 7.3</div>
+</div>
+</div>
+</div>
+<button onclick="event.stopPropagation(); window.location.href='analysis.html?symbol=INFY';" class="w-full mt-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 text-white font-label-caps text-[11px] rounded-lg transition-all relative z-10">VIEW FULL ANALYSIS</button>
+</div>
+<!-- Setup Card 5 -->
+<div onclick="window.location.href='analysis.html?symbol=ICICIBANK'" class="glass-panel rounded-xl p-5 hover:border-tertiary/50 hover:-translate-y-2 hover:shadow-[0_15px_30px_-5px_rgba(102,253,172,0.15)] transition-all duration-300 cursor-pointer flex flex-col relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-16 h-16 bg-tertiary/10 blur-2xl rounded-full group-hover:bg-tertiary/30 transition-all"></div>
+<div class="flex justify-between items-start mb-5 relative z-10">
+<div>
+<h4 class="font-display-lg text-xl text-white">ICICIBANK</h4>
+<span class="font-label-caps text-[10px] text-tertiary mt-1 block">LONG</span>
+</div>
+<span class="bg-tertiary border border-tertiary text-[#002110] font-label-caps px-2.5 py-1 rounded text-[10px] shadow-[0_0_10px_rgba(102,253,172,0.4)]">TRIGGERED</span>
+</div>
+<div class="space-y-4 flex-1 relative z-10">
+<div class="flex justify-between text-on-surface-variant border-b border-white/10 pb-3">
+<span class="font-body-sm text-sm">Setup</span>
+<span class="font-label-caps text-[11px] text-white">20-Day EMA Bounce</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">Entry</div>
+<div class="font-data-tabular text-white">1,085.00</div>
+</div>
+<div class="bg-tertiary/10 p-2 rounded-lg border border-tertiary/20">
+<div class="font-label-caps text-[9px] text-tertiary uppercase mb-1">Target</div>
+<div class="font-data-tabular text-tertiary">1,160.00</div>
+</div>
+<div class="bg-error/10 p-2 rounded-lg border border-error/20">
+<div class="font-label-caps text-[9px] text-error uppercase mb-1">Stop Loss</div>
+<div class="font-data-tabular text-error">1,065.00</div>
+</div>
+<div class="bg-black/30 p-2 rounded-lg border border-white/5">
+<div class="font-label-caps text-[9px] text-on-surface-variant uppercase mb-1">R:R Ratio</div>
+<div class="font-data-tabular text-white">1 : 3.75</div>
+</div>
+</div>
+</div>
+<button onclick="event.stopPropagation(); window.location.href='analysis.html?symbol=ICICIBANK';" class="w-full mt-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/30 text-white font-label-caps text-[11px] rounded-lg transition-all relative z-10">VIEW FULL ANALYSIS</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-secondary text-on-secondary-container rounded-full shadow-[0_0_20px_rgba(173,198,255,0.4)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 hover:bg-white border border-secondary/50">
+<span class="material-symbols-outlined font-variation-settings: 'FILL' 1;">add</span>
+</button>
+<!-- Mobile Nav (Bottom) -->
+<nav class="md:hidden flex items-center justify-around h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-t border-outline-variant shrink-0 relative z-50">
+<div class="flex flex-col items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined drop-shadow-[0_0_5px_rgba(102,253,172,0.8)]">home</span>
+<span class="text-[9px] font-label-caps">HOME</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='scanner.html'">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[9px] font-label-caps">SCANNER</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='options.html'">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-[9px] font-label-caps">TRADE</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='analysis.html'">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-[9px] font-label-caps">CHART</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='journal.html'">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[9px] font-label-caps">PROFILE</span>
+</div>
+</nav>
+</main>
+<script>
+        // Simulating Live Ticker Updates
+        const ticker = document.querySelector('.font-data-tabular');
+        setInterval(() => {
+            const nifty = (22450.20 + (Math.random() * 10 - 5)).toFixed(2);
+            const change = (1.2 + (Math.random() * 0.1 - 0.05)).toFixed(2);
+            if(ticker) ticker.innerHTML = `NIFTY: ${nifty} (+${change}%) <span class="text-on-surface-variant mx-2">|</span> SENSEX: 74,120.45 (+0.8%) <span class="text-on-surface-variant mx-2">|</span> VIX: 12.4 (-2.1%)`;
+        }, 3000);
+
+        // WebGL Shader Background
+        const canvas = document.getElementById('shader-canvas');
+        const gl = canvas.getContext('webgl');
+
+        if (gl) {
+            const resize = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            };
+            window.addEventListener('resize', resize);
+            resize();
+
+            const vertexShaderSource = `
+                attribute vec2 position;
+                varying vec2 v_texCoord;
+                void main() {
+                    v_texCoord = position * 0.5 + 0.5;
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            const fragmentShaderSource = `
+                precision highp float;
+                uniform float u_time;
+                uniform vec2 u_resolution;
+                uniform vec2 u_mouse;
+
+                varying vec2 v_texCoord;
+
+                float grid(vec2 uv, float res) {
+                    vec2 grid = fract(uv * res);
+                    return 1.0 - smoothstep(0.0, 0.05, min(grid.x, grid.y));
+                }
+
+                void main() {
+                    vec2 uv = v_texCoord;
+                    vec2 mouse = u_mouse / u_resolution;
+                    
+                    // Perspective grid background
+                    vec3 color = vec3(0.02, 0.02, 0.03); // Deep base
+                    
+                    // Moving data-line pulses
+                    float scanline = sin(uv.y * 100.0 - u_time * 2.0) * 0.02;
+                    color += vec3(0.0, 0.5, 0.8) * scanline * 0.2;
+                    
+                    // Atmospheric mouse glow
+                    float dist = length(uv - mouse);
+                    float glow = exp(-dist * 4.0) * 0.15;
+                    color += vec3(0.0, 0.6, 0.4) * glow;
+                    
+                    // Floating digital "particles"
+                    vec2 p_uv = uv * 10.0;
+                    float p = step(0.98, fract(sin(dot(floor(p_uv) ,vec2(12.9898,78.233))) * 43758.5453));
+                    color += vec3(0.0, 1.0, 0.6) * p * 0.05 * (0.5 + 0.5 * sin(u_time + p_uv.x));
+                    
+                    // Vignette
+                    float vignette = smoothstep(1.2, 0.4, length(uv - 0.5));
+                    color *= vignette;
+                    
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `;
+
+            const compileShader = (type, source) => {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                return shader;
+            };
+
+            const program = gl.createProgram();
+            gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vertexShaderSource));
+            gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource));
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+            const positionLocation = gl.getAttribLocation(program, "position");
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            const timeLocation = gl.getUniformLocation(program, "u_time");
+            const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+            const mouseLocation = gl.getUniformLocation(program, "u_mouse");
+
+            let mouseX = 0, mouseY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = window.innerHeight - e.clientY;
+            });
+
+            const renderShader = (time) => {
+                gl.uniform1f(timeLocation, time * 0.001);
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                gl.uniform2f(mouseLocation, mouseX, mouseY);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                requestAnimationFrame(renderShader);
+            };
+            requestAnimationFrame(renderShader);
+        }
+
+        // 3D Market Intelligence Core
+        (function() {
+          const container = document.getElementById('threejs-container');
+          if(!container || typeof THREE === 'undefined') return;
+          const width = container.clientWidth || window.innerWidth;
+          const height = container.clientHeight || window.innerHeight;
+
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+          const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+          renderer.setSize(width, height);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          container.appendChild(renderer.domElement);
+
+          // Market Intelligence Core - Crystalline Geometry
+          const group = new THREE.Group();
+          scene.add(group);
+          // Position it to the right
+          group.position.set(4, 0, -2);
+
+          const geometry = new THREE.IcosahedronGeometry(2, 2);
+          const material = new THREE.MeshPhongMaterial({
+            color: 0x00ffcc,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15,
+            shininess: 100
+          });
+          const core = new THREE.Mesh(geometry, material);
+          group.add(core);
+
+          // Inner solid core
+          const innerGeom = new THREE.IcosahedronGeometry(1.5, 1);
+          const innerMat = new THREE.MeshPhongMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.05,
+            flatShading: true
+          });
+          const innerCore = new THREE.Mesh(innerGeom, innerMat);
+          group.add(innerCore);
+
+          // Data Rings
+          const ringGeom = new THREE.TorusGeometry(3, 0.01, 16, 100);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.1 });
+          const rings = [];
+          for(let i=0; i<3; i++) {
+            const ring = new THREE.Mesh(ringGeom, ringMat);
+            ring.rotation.x = Math.random() * Math.PI;
+            ring.rotation.y = Math.random() * Math.PI;
+            group.add(ring);
+            rings.push(ring);
+          }
+
+          // Floating Data Particles
+          const pCount = 300;
+          const pGeom = new THREE.BufferGeometry();
+          const pPos = new Float32Array(pCount * 3);
+          for(let i=0; i<pCount*3; i++) pPos[i] = (Math.random() - 0.5) * 15;
+          pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+          const pMat = new THREE.PointsMaterial({ color: 0x00ffcc, size: 0.05, transparent: true, opacity: 0.3 });
+          const particles = new THREE.Points(pGeom, pMat);
+          group.add(particles);
+
+          const light = new THREE.PointLight(0xffffff, 1, 100);
+          light.position.set(10, 10, 10);
+          scene.add(light);
+          scene.add(new THREE.AmbientLight(0x404040));
+
+          camera.position.z = 8;
+
+          let mouseX = 0, mouseY = 0;
+          window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+            mouseY = (e.clientY / window.innerHeight - 0.5) * 0.5;
+          });
+
+          const animate = () => {
+            requestAnimationFrame(animate);
+            core.rotation.y += 0.002;
+            innerCore.rotation.y -= 0.001;
+            rings.forEach((r, i) => {
+              r.rotation.z += 0.005 * (i + 1);
+              r.rotation.y += 0.002;
+            });
+            particles.rotation.y += 0.0005;
+            
+            group.rotation.x += (mouseY - group.rotation.x) * 0.05;
+            group.rotation.y += (mouseX - group.rotation.y) * 0.05;
+            
+            renderer.render(scene, camera);
+          };
+
+          window.addEventListener('resize', () => {
+            const w = container.clientWidth || window.innerWidth;
+            const h = container.clientHeight || window.innerHeight;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
+          });
+
+          animate();
+        })();
+    </script>
+</body></html>

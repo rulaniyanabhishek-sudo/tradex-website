@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TradeX Terminal - Options Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r125/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#c5c6ca",
+                    "secondary-container": "#4b8eff",
+                    "inverse-surface": "#e5e2e1",
+                    "error": "#ffb4ab",
+                    "surface-tint": "#c5c6cb",
+                    "tertiary-fixed-dim": "#44e092",
+                    "surface-container-low": "#1c1b1c",
+                    "secondary": "#adc6ff",
+                    "on-secondary-fixed-variant": "#004493",
+                    "on-surface": "#e5e2e1",
+                    "surface-container-lowest": "#0e0e0e",
+                    "tertiary-container": "#001106",
+                    "on-primary-fixed-variant": "#44474b",
+                    "primary-fixed": "#e1e2e7",
+                    "on-error": "#690005",
+                    "on-primary": "#2e3134",
+                    "inverse-primary": "#5c5f62",
+                    "primary": "#c5c6cb",
+                    "background": "#131313",
+                    "on-secondary-container": "#00285c",
+                    "surface-bright": "#3a3939",
+                    "on-secondary": "#002e69",
+                    "on-primary-container": "#797b7f",
+                    "tertiary-fixed": "#66fdac",
+                    "surface-container": "#201f20",
+                    "on-tertiary-fixed": "#002110",
+                    "secondary-fixed-dim": "#adc6ff",
+                    "secondary-fixed": "#d8e2ff",
+                    "on-tertiary-fixed-variant": "#00522f",
+                    "outline-variant": "#45474a",
+                    "primary-fixed-dim": "#c5c6cb",
+                    "inverse-on-surface": "#313030",
+                    "on-tertiary": "#00391f",
+                    "tertiary": "#44e092",
+                    "on-tertiary-container": "#008d55",
+                    "surface-variant": "#353435",
+                    "error-container": "#93000a",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-high": "#2a2a2a",
+                    "on-primary-fixed": "#191c1f",
+                    "surface-container-highest": "#353435",
+                    "surface-dim": "#131313",
+                    "on-secondary-fixed": "#001a41",
+                    "on-background": "#e5e2e1",
+                    "primary-container": "#0b0e11",
+                    "outline": "#8f9194",
+                    "surface": "#131313"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "unit": "4px",
+                    "margin-lg": "24px",
+                    "margin-sm": "4px",
+                    "container-padding": "16px",
+                    "input-height": "36px",
+                    "margin-md": "12px",
+                    "table-row-height": "32px",
+                    "widget-gap": "8px"
+            },
+            "fontFamily": {
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "data-tabular": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "data-tabular": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0B0E11; color: #e5e2e1; }
+        .glass-card { background: rgba(22, 26, 30, 0.45); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .tab-active { border-bottom: 2px solid #44e092; color: #44e092; }
+        .terminal-grid { grid-template-columns: 256px 1fr; }
+        .pulse-live { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 2px; }
+        .data-up { color: #44e092; }
+        .data-down { color: #ffb4ab; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        
+        #shader-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        #threejs-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .row-hover-transition {
+            transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden h-screen flex flex-col">
+<!-- Fixed Background Layers -->
+<canvas id="shader-canvas"></canvas>
+<div id="threejs-container"></div>
+<!-- TopAppBar (Ticker) -->
+<header class="flex items-center justify-between px-4 py-1 h-8 bg-surface-container-lowest/60 backdrop-blur-md border-b border-outline-variant shrink-0 relative z-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[14px] pulse-live">sensors</span>
+<span class="font-data-tabular text-data-tabular text-tertiary">NIFTY: 22,450.20 (+1.2%) | SENSEX: 74,120.45 (+0.8%) | VIX: 12.4 (-2.1%)</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-label-caps text-on-surface-variant">MARKET OPEN</span>
+<div class="flex items-center gap-2">
+<button class="hover:bg-surface-variant p-1 rounded transition-colors"><span class="material-symbols-outlined text-[18px]">refresh</span></button>
+<button class="hover:bg-surface-variant p-1 rounded transition-colors"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+</div>
+</div>
+</header>
+<!-- TopNavBar -->
+<nav class="flex justify-between items-center w-full px-container-padding h-input-height bg-background/40 backdrop-blur-xl border-b border-outline-variant shrink-0 relative z-10">
+<div class="flex items-center gap-8">
+<span class="font-display-lg text-display-lg font-black text-tertiary tracking-tighter cursor-pointer" onclick="window.location.href='index.html'">TRADEX TERMINAL</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant font-label-caps hover:text-tertiary transition-colors" href="index.html">HOME</a>
+<a class="text-on-surface-variant font-label-caps hover:text-tertiary transition-colors" href="scanner.html">LIVE SCANNER</a>
+<a class="text-on-surface-variant font-label-caps hover:text-tertiary transition-colors" href="analysis.html">STOCK ANALYSIS</a>
+<a class="text-tertiary border-b-2 border-tertiary pb-1 font-label-caps" href="options.html">OPTIONS ANALYSIS</a>
+<a class="text-on-surface-variant font-label-caps hover:text-tertiary transition-colors" href="journal.html">TRADE JOURNAL</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative bg-surface-container-low/40 border border-outline-variant px-3 py-1 flex items-center gap-2 rounded">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-48 p-0 placeholder:text-outline" placeholder="Search Symbols..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-tertiary">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-tertiary">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-tertiary">account_circle</span>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden relative z-10">
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-full border-r border-outline-variant bg-surface-container-low/40 backdrop-blur-lg w-64 shrink-0">
+<div class="p-4 border-b border-outline-variant flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary-container/40 flex items-center justify-center border border-outline-variant">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-primary leading-tight">Pro Trader</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant">Verified Account</div>
+</div>
+</div>
+<div class="py-4 flex-1 space-y-1">
+<div class="px-4 mb-2 font-label-caps text-label-caps text-outline">MARKET WATCH</div>
+<div class="flex items-center justify-between hover:bg-white/5 transition-all text-on-surface-variant px-4 py-2 cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">show_chart</span>
+<span class="font-label-caps">NIFTY 50</span>
+</div>
+<span class="text-tertiary font-data-tabular">22,450.20</span>
+</div>
+<div class="flex items-center justify-between hover:bg-white/5 transition-all text-on-surface-variant px-4 py-2 cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="font-label-caps">SENSEX</span>
+</div>
+<span class="text-tertiary font-data-tabular">74,120.45</span>
+</div>
+<div class="bg-secondary-container/20 text-secondary border-l-2 border-secondary px-4 py-2 flex items-center gap-3 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-caps">Favourites</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant px-4 py-2 hover:bg-white/5 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">language</span>
+<span class="font-label-caps">Indices</span>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant px-4 py-2 hover:bg-white/5 cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+<span class="font-label-caps">Alerts</span>
+</div>
+</div>
+<div class="p-4 mt-auto space-y-4">
+<button class="w-full bg-secondary-container text-on-secondary-container font-label-caps py-2 rounded-lg hover:brightness-110 active:scale-[0.98] transition-all">
+                    NEW TRADE
+                </button>
+<div class="flex items-center justify-around text-on-surface-variant border-t border-outline-variant pt-4">
+<div class="flex flex-col items-center gap-1 cursor-pointer hover:text-primary">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-caps">Settings</span>
+</div>
+<div class="flex flex-col items-center gap-1 cursor-pointer hover:text-primary">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps">Support</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto p-4 space-y-4 relative">
+<!-- Underlying Stock Summary & Options Suitability -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-widget-gap">
+<!-- Stock Summary -->
+<div class="lg:col-span-8 glass-card p-4 rounded flex items-center justify-between border-l-4 border-tertiary">
+<div class="flex items-center gap-6">
+<div class="space-y-1">
+<h2 class="font-headline-md text-headline-md text-on-surface">RELIANCE INDUSTRIES</h2>
+<div class="flex items-center gap-2">
+<span class="bg-tertiary-container/40 text-tertiary px-2 py-0.5 rounded font-label-caps backdrop-blur-sm">BULLISH INDICATOR</span>
+<span class="text-outline font-data-tabular">NSE: RELIANCE</span>
+</div>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant mx-2"></div>
+<div class="space-y-1">
+<div class="text-outline font-label-caps">SPOT PRICE</div>
+<div class="font-data-tabular text-headline-md">₹2,945.35 <span class="text-tertiary text-body-sm">+1.45%</span></div>
+</div>
+<div class="h-10 w-[1px] bg-outline-variant mx-2"></div>
+<div class="space-y-1">
+<div class="text-outline font-label-caps">24H VOLUME</div>
+<div class="font-data-tabular text-headline-md">14.2M</div>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex gap-2 mb-2">
+<button class="bg-tertiary-container/40 border border-tertiary text-tertiary font-label-caps px-4 py-1 rounded hover:bg-tertiary/20 transition-colors backdrop-blur-md">BUY CALL</button>
+<button class="bg-error-container/20 border border-error text-error font-label-caps px-4 py-1 rounded hover:bg-error/10 transition-colors backdrop-blur-md">SELL PUT</button>
+</div>
+<div class="text-outline text-body-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] pulse-live text-tertiary">circle</span>
+                            Live Market Data Connected
+                        </div>
+</div>
+</div>
+<!-- Suitability Card -->
+<div class="lg:col-span-4 glass-card p-4 rounded border-l-4 border-secondary-container">
+<div class="flex justify-between items-start mb-3">
+<div>
+<div class="font-label-caps text-outline">OPTIONS SUITABILITY</div>
+<div class="font-headline-md text-headline-md text-secondary-fixed">Moderate</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-[24px]">info</span>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between bg-white/5 p-2 rounded">
+<span class="text-body-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-[16px]">warning</span>
+                                Theta Decay Risk
+                            </span>
+<span class="text-error font-data-tabular">High (3 Days to Exp)</span>
+</div>
+<div class="flex items-center justify-between bg-white/5 p-2 rounded">
+<span class="text-body-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[16px]">check_circle</span>
+                                IV Percentile
+                            </span>
+<span class="text-tertiary font-data-tabular">42% (Optimal)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Warning Box for High IV/Low Liquidity -->
+<div class="bg-error-container/20 border border-error/50 p-3 rounded flex items-center gap-4 backdrop-blur-xl">
+<div class="w-10 h-10 rounded-full bg-error/30 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error">report_problem</span>
+</div>
+<div class="flex-1">
+<div class="font-label-caps text-error font-bold">CRITICAL ALERT: TRADING RISK DETECTED</div>
+<p class="text-body-sm text-on-error-container font-medium">Option contracts for this expiry show significant liquidity gaps (Bid-Ask Spread &gt; 2.5%). High Theta erosion expected due to upcoming earnings volatility. Trade execution might experience slippage.</p>
+</div>
+<button class="bg-error text-on-error font-label-caps px-4 py-2 rounded shadow-lg">ACKNOWLEDGE</button>
+</div>
+<!-- Bento Layout for Analysis -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-widget-gap">
+<!-- Contracts Worth Analysing -->
+<div class="lg:col-span-3 space-y-widget-gap">
+<div class="glass-card p-4 rounded h-full">
+<div class="font-label-caps text-outline mb-4">CONTRACTS WORTH ANALYSING</div>
+<div class="space-y-3">
+<div class="p-3 bg-surface-container-high/40 rounded border border-outline-variant hover:border-secondary transition-all cursor-pointer backdrop-blur-sm">
+<div class="flex justify-between items-center mb-1">
+<span class="font-data-tabular text-body-md">2950 CE</span>
+<span class="bg-secondary-container/30 text-secondary text-[10px] px-1 rounded">ATM</span>
+</div>
+<div class="text-outline text-body-sm">LTP: ₹42.50 (+12%)</div>
+<div class="text-[10px] text-tertiary mt-2">HIGH LIQUIDITY</div>
+</div>
+<div class="p-3 bg-surface-container-high/40 rounded border border-outline-variant hover:border-secondary transition-all cursor-pointer backdrop-blur-sm">
+<div class="flex justify-between items-center mb-1">
+<span class="font-data-tabular text-body-md">2900 CE</span>
+<span class="bg-tertiary-container/30 text-tertiary text-[10px] px-1 rounded">ITM</span>
+</div>
+<div class="text-outline text-body-sm">LTP: ₹78.20 (+8.4%)</div>
+<div class="text-[10px] text-tertiary mt-2">IDEAL FOR INTRADAY</div>
+</div>
+<div class="p-3 bg-surface-container-high/40 rounded border border-outline-variant hover:border-secondary transition-all cursor-pointer opacity-60 backdrop-blur-sm">
+<div class="flex justify-between items-center mb-1">
+<span class="font-data-tabular text-body-md">3050 CE</span>
+<span class="bg-error-container/30 text-error text-[10px] px-1 rounded">OTM</span>
+</div>
+<div class="text-outline text-body-sm">LTP: ₹12.10 (-14.2%)</div>
+<div class="text-[10px] text-error mt-2">SPECULATIVE RISK</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Option Chain Table -->
+<div class="lg:col-span-9 glass-card rounded overflow-hidden flex flex-col">
+<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low/40">
+<div class="flex items-center gap-4">
+<h3 class="font-headline-md text-headline-md">Option Chain</h3>
+<div class="flex bg-background/40 rounded p-1 border border-outline-variant backdrop-blur-sm">
+<button class="px-3 py-1 font-label-caps text-tertiary bg-surface-variant/40 rounded">CALLS</button>
+<button class="px-3 py-1 font-label-caps text-on-surface-variant hover:text-on-surface">PUTS</button>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<select class="bg-background/40 border border-outline-variant text-body-sm font-label-caps rounded px-2 py-1 focus:ring-0">
+<option>28 MAR 2024</option>
+<option>04 APR 2024</option>
+<option>25 APR 2024</option>
+</select>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-white">settings</span>
+</div>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container/30 border-b border-outline-variant">
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">STRIKE</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">TYPE</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">LTP</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">VOLUME</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">OI (LAKHS)</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">IV %</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">DELTA</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">THETA</th>
+<th class="px-4 py-2 font-label-caps text-outline text-[10px]">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height bg-tertiary-container/5">
+<td class="px-4 py-2 font-data-tabular font-bold">2900</td>
+<td class="px-4 py-2 text-tertiary font-label-caps">CE (ITM)</td>
+<td class="px-4 py-2 font-data-tabular">78.20</td>
+<td class="px-4 py-2 font-data-tabular text-on-surface-variant">12,450</td>
+<td class="px-4 py-2 font-data-tabular">15.2</td>
+<td class="px-4 py-2 font-data-tabular">24.5</td>
+<td class="px-4 py-2 font-data-tabular text-tertiary">0.82</td>
+<td class="px-4 py-2 font-data-tabular text-error">-12.5</td>
+<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (ITM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-tertiary font-label-caps hover:underline">TRADE</button></td>
+</tr>
+<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height border-l-2 border-secondary-container bg-secondary-container/5">
+<td class="px-4 py-2 font-data-tabular font-bold">2950</td>
+<td class="px-4 py-2 text-secondary font-label-caps">CE (ATM)</td>
+<td class="px-4 py-2 font-data-tabular">42.50</td>
+<td class="px-4 py-2 font-data-tabular text-on-surface-variant">84,120</td>
+<td class="px-4 py-2 font-data-tabular">42.8</td>
+<td class="px-4 py-2 font-data-tabular">22.1</td>
+<td class="px-4 py-2 font-data-tabular text-tertiary">0.50</td>
+<td class="px-4 py-2 font-data-tabular text-error">-28.4</td>
+<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (ATM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-secondary font-label-caps hover:underline">TRADE</button></td>
+</tr>
+<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height">
+<td class="px-4 py-2 font-data-tabular font-bold">3000</td>
+<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
+<td class="px-4 py-2 font-data-tabular">21.15</td>
+<td class="px-4 py-2 font-data-tabular text-on-surface-variant">52,300</td>
+<td class="px-4 py-2 font-data-tabular">31.5</td>
+<td class="px-4 py-2 font-data-tabular">28.9</td>
+<td class="px-4 py-2 font-data-tabular text-tertiary">0.24</td>
+<td class="px-4 py-2 font-data-tabular text-error">-45.2</td>
+<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
+</tr>
+<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height">
+<td class="px-4 py-2 font-data-tabular font-bold">3050</td>
+<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
+<td class="px-4 py-2 font-data-tabular">12.10</td>
+<td class="px-4 py-2 font-data-tabular text-on-surface-variant">18,900</td>
+<td class="px-4 py-2 font-data-tabular">12.4</td>
+<td class="px-4 py-2 font-data-tabular">34.2</td>
+<td class="px-4 py-2 font-data-tabular text-tertiary">0.12</td>
+<td class="px-4 py-2 font-data-tabular text-error">-58.1</td>
+<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
+</tr>
+<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height opacity-50">
+<td class="px-4 py-2 font-data-tabular font-bold">3100</td>
+<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
+<td class="px-4 py-2 font-data-tabular">5.40</td>
+<td class="px-4 py-2 font-data-tabular text-on-surface-variant">4,200</td>
+<td class="px-4 py-2 font-data-tabular">5.8</td>
+<td class="px-4 py-2 font-data-tabular">41.0</td>
+<td class="px-4 py-2 font-data-tabular text-tertiary">0.05</td>
+<td class="px-4 py-2 font-data-tabular text-error">-72.4</td>
+<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
+</tr>
+<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height opacity-40">
+<td class="px-4 py-2 font-data-tabular font-bold">3150</td>
+<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
+<td class="px-4 py-2 font-data-tabular">2.10</td>
+<td class="px-4 py-2 font-data-tabular text-on-surface-variant">1,100</td>
+<td class="px-4 py-2 font-data-tabular">2.2</td>
+<td class="px-4 py-2 font-data-tabular">45.5</td>
+<td class="px-4 py-2 font-data-tabular text-tertiary">0.02</td>
+<td class="px-4 py-2 font-data-tabular text-error">-89.1</td>
+<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-2 bg-surface-container-lowest/40 border-t border-outline-variant flex justify-between items-center text-[10px] text-outline font-label-caps backdrop-blur-md">
+<div>DISPLAYING MARCH 28 EXPIRY | DATA UPDATED 1S AGO</div>
+<div class="flex gap-4">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary"></span> ITM</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary"></span> ATM</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-error"></span> OTM</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Contextual Insights Section -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-widget-gap">
+<div class="glass-card p-4 rounded bg-gradient-to-br from-surface-container-low/40 to-background/40">
+<h4 class="font-label-caps text-tertiary mb-2">PROBABILITY OF PROFIT (POP)</h4>
+<div class="flex items-end gap-4 h-24">
+<div class="flex-1 bg-surface-container-highest/40 rounded-t relative group overflow-hidden border border-outline-variant/30">
+<div class="absolute bottom-0 w-full bg-tertiary h-[64%] opacity-80"></div>
+<div class="absolute inset-0 flex items-center justify-center font-data-tabular text-[10px]">64%</div>
+</div>
+<div class="flex-1 bg-surface-container-highest/40 rounded-t relative group overflow-hidden border border-outline-variant/30">
+<div class="absolute bottom-0 w-full bg-secondary h-[42%] opacity-80"></div>
+<div class="absolute inset-0 flex items-center justify-center font-data-tabular text-[10px]">42%</div>
+</div>
+<div class="flex-1 bg-surface-container-highest/40 rounded-t relative group overflow-hidden border border-outline-variant/30">
+<div class="absolute bottom-0 w-full bg-error h-[12%] opacity-80"></div>
+<div class="absolute inset-0 flex items-center justify-center font-data-tabular text-[10px]">12%</div>
+</div>
+</div>
+<div class="flex justify-between mt-2 font-label-caps text-[10px] text-outline">
+<span>ITM STRANGLE</span>
+<span>ATM STRADDLE</span>
+<span>OTM BUTTERFLY</span>
+</div>
+</div>
+<div class="glass-card p-4 rounded flex flex-col justify-between">
+<div>
+<h4 class="font-label-caps text-outline mb-1">IMPLIED VOLATILITY (IV) SKEW</h4>
+<p class="text-body-sm text-on-surface-variant opacity-70">Puts are trading at 1.4x premium relative to Calls, suggesting defensive market sentiment.</p>
+</div>
+<div class="flex items-center justify-center h-20">
+<!-- Simple SVG Skew Line -->
+<svg class="w-full h-full" viewbox="0 0 400 100">
+<path d="M 50,80 Q 200,20 350,70" fill="none" stroke="#44e092" stroke-width="2"></path>
+<circle cx="50" cy="80" fill="#44e092" r="4"></circle>
+<circle cx="200" cy="20" fill="#44e092" r="4"></circle>
+<circle cx="350" cy="70" fill="#44e092" r="4"></circle>
+<text fill="#8f9194" font-family="Inter" font-size="10" x="40" y="95">PUTS</text>
+<text fill="#8f9194" font-family="Inter" font-size="10" x="330" y="95">CALLS</text>
+</svg>
+</div>
+</div>
+</div>
+</main>
+</div>
+<script>
+    // --- WebGL Shader Background Logic ---
+    (function() {
+      const canvas = document.getElementById('shader-canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return;
+
+      function syncSize() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        if (canvas.width !== w || canvas.height !== h) {
+          canvas.width  = w;
+          canvas.height = h;
+        }
+      }
+      window.addEventListener('resize', syncSize);
+      syncSize();
+
+      const vs = `attribute vec2 a_position;
+    varying vec2 v_texCoord;
+    void main() {
+      v_texCoord = a_position * 0.5 + 0.5;
+      gl_Position = vec4(a_position, 0.0, 1.0);
+    }`;
+      const fs = `precision highp float;
+    uniform float u_time;
+    uniform vec2 u_resolution;
+    uniform vec2 u_mouse;
+    varying vec2 v_texCoord;
+
+    void main() {
+        vec2 uv = v_texCoord;
+        vec2 center = u_mouse / u_resolution;
+        vec2 grid = fract(uv * 40.0 + u_time * 0.05);
+        float line = step(0.95, grid.x) + step(0.95, grid.y);
+        float wave = sin(uv.x * 10.0 + u_time) * 0.1 + uv.y;
+        float intensity = smoothstep(0.45, 0.5, wave) * smoothstep(0.55, 0.5, wave);
+        float dist = length(uv - center);
+        float mouseGlow = exp(-dist * 5.0) * 0.5;
+        vec3 baseColor = vec3(0.04, 0.05, 0.06);
+        vec3 accentColor = vec3(0.0, 0.8, 0.4);
+        vec3 color = mix(baseColor, accentColor * 0.2, line * 0.5);
+        color += accentColor * intensity * 0.3;
+        color += accentColor * mouseGlow;
+        float vignette = smoothstep(1.5, 0.5, length(uv - 0.5));
+        color *= vignette;
+        gl_FragColor = vec4(color, 1.0);
+    }`;
+
+      function cs(type, src) {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      }
+      const prog = gl.createProgram();
+      gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+      gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+      const pos = gl.getAttribLocation(prog, 'a_position');
+      gl.enableVertexAttribArray(pos);
+      gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+      const uTime = gl.getUniformLocation(prog, 'u_time');
+      const uRes = gl.getUniformLocation(prog, 'u_resolution');
+      const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+      let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+      window.addEventListener('mousemove', (event) => {
+        mouse.x = event.clientX;
+        mouse.y = canvas.height - event.clientY;
+      });
+
+      function render(t) {
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        if (uTime) gl.uniform1f(uTime, t * 0.001);
+        if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+        if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(render);
+      }
+      render(0);
+    })();
+
+    // --- Three.js Globe Logic ---
+    (function() {
+      const container = document.getElementById('threejs-container');
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      const geometry = new THREE.SphereGeometry(2, 32, 32);
+      const material = new THREE.MeshPhongMaterial({
+        color: 0x00ff88,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15,
+        shininess: 100
+      });
+      const globe = new THREE.Mesh(geometry, material);
+      globe.position.x = 2; // Positioned slightly to the right for terminal feel
+      scene.add(globe);
+
+      const ringGeom = new THREE.TorusGeometry(3, 0.005, 16, 100);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00ff88, transparent: true, opacity: 0.05 });
+      const ring1 = new THREE.Mesh(ringGeom, ringMat);
+      const ring2 = new THREE.Mesh(ringGeom, ringMat);
+      ring1.position.x = 2;
+      ring2.position.x = 2;
+      ring2.rotation.x = Math.PI / 2;
+      scene.add(ring1);
+      scene.add(ring2);
+
+      const particlesCount = 200;
+      const pGeometry = new THREE.BufferGeometry();
+      const pPositions = new Float32Array(particlesCount * 3);
+      for (let i = 0; i < particlesCount * 3; i++) {
+        pPositions[i] = (Math.random() - 0.5) * 12;
+      }
+      pGeometry.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+      const pMaterial = new THREE.PointsMaterial({
+        color: 0x00ff88,
+        size: 0.02,
+        transparent: true,
+        opacity: 0.3
+      });
+      const particles = new THREE.Points(pGeometry, pMaterial);
+      scene.add(particles);
+
+      const light = new THREE.PointLight(0xffffff, 1, 100);
+      light.position.set(5, 5, 5);
+      scene.add(light);
+      scene.add(new THREE.AmbientLight(0x404040));
+
+      camera.position.z = 6;
+
+      let mouseX = 0, mouseY = 0;
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * -2;
+      });
+
+      const animate = () => {
+        requestAnimationFrame(animate);
+        globe.rotation.y += 0.001;
+        globe.rotation.x += 0.0005;
+        ring1.rotation.z += 0.002;
+        ring2.rotation.z -= 0.001;
+        particles.rotation.y += 0.0005;
+        camera.position.x += (mouseX * 0.5 - camera.position.x) * 0.05;
+        camera.position.y += (mouseY * 0.5 - camera.position.y) * 0.05;
+        camera.lookAt(scene.position);
+        renderer.render(scene, camera);
+      };
+      animate();
+
+      window.addEventListener('resize', () => {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+    })();
+
+    // Pulsing Live Indicator Logic
+    setInterval(() => {
+        const dataPills = document.querySelectorAll('.pulse-live');
+        dataPills.forEach(pill => {
+            pill.style.opacity = (pill.style.opacity === '0.5' ? '1' : '0.5');
+        });
+    }, 1000);
+
+    // Show premium toast notification
+    function showToast(message) {
+        let toast = document.getElementById('options-toast');
+        if(!toast) {
+            toast = document.createElement('div');
+            toast.id = 'options-toast';
+            toast.className = 'fixed bottom-8 right-8 bg-surface-container-lowest border border-tertiary text-tertiary px-6 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 z-50 backdrop-blur-md transform translate-y-10 opacity-0 transition-all duration-300';
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `
+            <span class="material-symbols-outlined text-tertiary">check_circle</span>
+            <span class="font-body-sm font-bold text-white">${message}</span>
+        `;
+        toast.classList.remove('translate-y-10', 'opacity-0');
+        setTimeout(() => {
+            toast.classList.add('translate-y-10', 'opacity-0');
+        }, 3000);
+    }
+    </script>
+</body></html>

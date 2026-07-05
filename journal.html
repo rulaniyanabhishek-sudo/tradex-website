@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>TradeX Terminal - Trade Journal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@500;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(30, 30, 30, 0.4);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        .market-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        body {
+            background-color: #000;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#c5c6ca",
+                      "secondary-container": "#4b8eff",
+                      "inverse-surface": "#e5e2e1",
+                      "error": "#ffb4ab",
+                      "surface-tint": "#c5c6cb",
+                      "tertiary-fixed-dim": "#44e092",
+                      "surface-container-low": "rgba(28, 27, 28, 0.6)",
+                      "secondary": "#adc6ff",
+                      "on-secondary-fixed-variant": "#004493",
+                      "on-surface": "#e5e2e1",
+                      "surface-container-lowest": "rgba(14, 14, 14, 0.8)",
+                      "tertiary-container": "#001106",
+                      "on-primary-fixed-variant": "#44474b",
+                      "primary-fixed": "#e1e2e7",
+                      "on-error": "#690005",
+                      "on-primary": "#2e3134",
+                      "inverse-primary": "#5c5f62",
+                      "primary": "#c5c6cb",
+                      "background": "transparent",
+                      "on-secondary-container": "#00285c",
+                      "surface-bright": "#3a3939",
+                      "on-secondary": "#002e69",
+                      "on-primary-container": "#797b7f",
+                      "tertiary-fixed": "#66fdac",
+                      "surface-container": "rgba(32, 31, 32, 0.5)",
+                      "on-tertiary-fixed": "#002110",
+                      "secondary-fixed-dim": "#adc6ff",
+                      "secondary-fixed": "#d8e2ff",
+                      "on-tertiary-fixed-variant": "#00522f",
+                      "outline-variant": "rgba(255,255,255,0.1)",
+                      "primary-fixed-dim": "#c5c6cb",
+                      "inverse-on-surface": "#313030",
+                      "on-tertiary": "#00391f",
+                      "tertiary": "#66fdac",
+                      "on-tertiary-container": "#008d55",
+                      "surface-variant": "rgba(53, 52, 53, 0.5)",
+                      "error-container": "#93000a",
+                      "on-error-container": "#ffdad6",
+                      "surface-container-high": "rgba(42, 42, 42, 0.6)",
+                      "on-primary-fixed": "#191c1f",
+                      "surface-container-highest": "rgba(53, 52, 53, 0.7)",
+                      "surface-dim": "#131313",
+                      "on-secondary-fixed": "#001a41",
+                      "on-background": "#e5e2e1",
+                      "primary-container": "rgba(11, 14, 17, 0.5)",
+                      "outline": "rgba(255,255,255,0.2)",
+                      "surface": "rgba(19, 19, 19, 0.4)"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "margin-lg": "24px",
+                      "margin-sm": "4px",
+                      "container-padding": "24px",
+                      "input-height": "48px",
+                      "margin-md": "12px",
+                      "table-row-height": "32px",
+                      "widget-gap": "16px"
+              },
+              "fontFamily": {
+                      "body-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "data-tabular": ["Roboto Mono"]
+              },
+              "fontSize": {
+                      "body-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-caps": ["11px", {"lineHeight": "14px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "data-tabular": ["14px", {"lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="flex h-screen overflow-hidden text-on-surface">
+    <!-- Shader and Three.js Backgrounds -->
+    <canvas class="fixed inset-0 w-full h-full -z-20" id="shader-canvas"></canvas>
+    <div class="fixed inset-0 w-full h-full -z-10 pointer-events-none" id="threejs-container"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="flex flex-col h-full border-r border-outline-variant bg-surface-container-low backdrop-blur-2xl hidden md:flex w-64 shrink-0">
+        <div class="p-container-padding">
+            <h1 class="font-headline-md text-headline-md text-primary mb-8 tracking-wider cursor-pointer" onclick="window.location.href='index.html'">TRADEX</h1>
+            <div class="flex items-center gap-3 mb-8 p-3 rounded-xl bg-white/5 border border-white/5 backdrop-blur-md">
+                <div class="w-10 h-10 rounded-lg bg-tertiary/20 flex items-center justify-center border border-tertiary/30 shadow-[0_0_15px_rgba(102,253,172,0.15)]">
+                    <span class="material-symbols-outlined text-tertiary">account_circle</span>
+                </div>
+                <div>
+                    <div class="font-label-caps text-label-caps text-white">Pro Trader</div>
+                    <div class="font-body-sm text-[10px] text-tertiary mt-0.5">Verified Account</div>
+                </div>
+            </div>
+            <button onclick="document.getElementById('newTradeModal').classList.remove('hidden')" class="w-full bg-secondary text-on-secondary-fixed font-label-caps py-3 rounded-lg mb-8 active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(173,198,255,0.2)] hover:shadow-[0_0_25px_rgba(173,198,255,0.4)]">
+                NEW TRADE
+            </button>
+            <nav class="space-y-2">
+                <div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='analysis.html'">
+                    <span class="material-symbols-outlined">show_chart</span>
+                    <span class="font-label-caps text-label-caps">NIFTY 50</span>
+                </div>
+                <div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='analysis.html'">
+                    <span class="material-symbols-outlined">analytics</span>
+                    <span class="font-label-caps text-label-caps">SENSEX</span>
+                </div>
+                <div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='analysis.html'">
+                    <span class="material-symbols-outlined">star</span>
+                    <span class="font-label-caps text-label-caps">Favourites</span>
+                </div>
+                <div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='index.html'">
+                    <span class="material-symbols-outlined">language</span>
+                    <span class="font-label-caps text-label-caps">Indices</span>
+                </div>
+                <div class="text-on-surface-variant px-4 py-3 flex items-center gap-3 hover:bg-white/5 transition-all cursor-pointer rounded-lg" onclick="window.location.href='index.html'">
+                    <span class="material-symbols-outlined">notifications_active</span>
+                    <span class="font-label-caps text-label-caps">Alerts</span>
+                </div>
+            </nav>
+        </div>
+        <div class="mt-auto p-container-padding border-t border-outline-variant bg-white/5">
+            <div class="text-on-surface-variant px-4 py-2 flex items-center gap-3 hover:text-white transition-all cursor-pointer" onclick="window.location.href='index.html'">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="font-label-caps text-label-caps">Settings</span>
+            </div>
+            <div class="text-on-surface-variant px-4 py-2 flex items-center gap-3 hover:text-white transition-all cursor-pointer mt-2" onclick="window.location.href='index.html'">
+                <span class="material-symbols-outlined">help</span>
+                <span class="font-label-caps text-label-caps">Support</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col min-w-0 bg-transparent overflow-hidden relative">
+        <!-- Top App Bar (Ticker) -->
+        <header class="flex items-center justify-between px-6 py-2 bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant shrink-0">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-tertiary text-sm market-pulse drop-shadow-[0_0_5px_rgba(102,253,172,0.8)]">sensors</span>
+                <span class="font-data-tabular text-[12px] text-tertiary tracking-wider" id="ticker-text">NIFTY: 22,450.20 (+1.2%) | SENSEX: 74,120.45 (+0.8%) | VIX: 12.4 (-2.1%)</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <span class="font-label-caps text-label-caps text-on-surface-variant tracking-widest text-[10px]">LIVE DATA STREAM</span>
+                <div class="flex items-center gap-3">
+                    <button class="material-symbols-outlined text-on-surface-variant hover:text-white hover:bg-white/5 rounded-lg p-1.5 transition-all text-lg">refresh</button>
+                    <button class="material-symbols-outlined text-on-surface-variant hover:text-white hover:bg-white/5 rounded-lg p-1.5 transition-all text-lg">more_vert</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Top Navigation -->
+        <nav class="flex justify-between items-center w-full px-container-padding h-input-height bg-background/60 backdrop-blur-xl border-b border-outline-variant sticky top-0 z-50 shrink-0">
+            <div class="flex items-center gap-8">
+                <h1 class="font-display-lg text-display-lg font-black text-tertiary tracking-tighter cursor-pointer" onclick="window.location.href='index.html'">TRADEX TERMINAL</h1>
+                <div class="hidden md:flex gap-6">
+                    <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="index.html">HOME</a>
+                    <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="scanner.html">LIVE SCANNER</a>
+                    <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="analysis.html">STOCK ANALYSIS</a>
+                    <a class="font-label-caps text-label-caps text-on-surface-variant hover:text-tertiary transition-colors duration-200" href="options.html">OPTIONS ANALYSIS</a>
+                    <a class="font-label-caps text-label-caps text-tertiary border-b-2 border-tertiary pb-1" href="journal.html">TRADE JOURNAL</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative group">
+                    <span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+                    <input onkeydown="if(event.key === 'Enter') { window.location.href = 'analysis.html?symbol=' + this.value.toUpperCase(); }" class="bg-primary-container/40 border border-outline-variant rounded px-8 py-1 text-body-sm w-48 focus:outline-none focus:border-secondary transition-all" placeholder="Search Symbol..." type="text"/>
+                </div>
+                <div class="flex gap-2">
+                    <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">notifications</span>
+                    <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">settings</span>
+                    <span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">account_circle</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Scrollable Dashboard Grid -->
+        <section class="flex-1 overflow-y-auto p-container-padding space-y-widget-gap custom-scrollbar relative z-10">
+            
+            <!-- KPI Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-widget-gap">
+                <!-- Card 1 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                    <div class="flex justify-between items-center text-on-surface-variant mb-2">
+                        <span class="font-label-caps text-label-caps text-[10px] tracking-wider">NET PROFIT / LOSS</span>
+                        <span class="material-symbols-outlined text-tertiary">payments</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-tertiary font-data-tabular tracking-tighter" id="net-pnl">+$12,450.20</h3>
+                    <div class="text-[11px] text-tertiary mt-2 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        <span>+14.2% since last month</span>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                    <div class="flex justify-between items-center text-on-surface-variant mb-2">
+                        <span class="font-label-caps text-label-caps text-[10px] tracking-wider">WIN RATE</span>
+                        <span class="material-symbols-outlined text-secondary">emoji_events</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-white font-data-tabular tracking-tighter animate-pulse-live" id="win-rate">68.3%</h3>
+                    <div class="text-[11px] text-on-surface-variant mt-2 flex items-center gap-1">
+                        <span>97 Wins / 45 Losses</span>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                    <div class="flex justify-between items-center text-on-surface-variant mb-2">
+                        <span class="font-label-caps text-label-caps text-[10px] tracking-wider">PROFIT FACTOR</span>
+                        <span class="material-symbols-outlined text-secondary-container">query_stats</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-secondary font-data-tabular tracking-tighter" id="profit-factor">2.45</h3>
+                    <div class="text-[11px] text-on-surface-variant mt-2 flex items-center gap-1">
+                        <span>Gross Wins / Gross Losses</span>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                    <div class="flex justify-between items-center text-on-surface-variant mb-2">
+                        <span class="font-label-caps text-label-caps text-[10px] tracking-wider">TOTAL TRADES</span>
+                        <span class="material-symbols-outlined text-outline">history</span>
+                    </div>
+                    <h3 class="text-3xl font-black text-white font-data-tabular tracking-tighter" id="total-trades">142</h3>
+                    <div class="text-[11px] text-on-surface-variant mt-2 flex items-center gap-1">
+                        <span>Avg holding: 4.2 Hours</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equity Curve and Calendar Bento Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-widget-gap">
+                <!-- Equity Curve Chart -->
+                <div class="lg:col-span-8 glass-panel p-6 rounded-2xl flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="font-label-caps text-label-caps tracking-widest text-[11px] text-on-surface-variant">CUMULATIVE PERFORMANCE (EQUITY CURVE)</div>
+                        <div class="flex gap-2">
+                            <span class="px-2 py-0.5 bg-secondary-container/20 text-secondary text-[10px] font-label-caps rounded">BASE $50,000</span>
+                            <span class="px-2 py-0.5 bg-tertiary-container/20 text-tertiary text-[10px] font-label-caps rounded" id="final-equity">$62,450.20</span>
+                        </div>
+                    </div>
+                    <!-- Custom SVG Graph Container -->
+                    <div class="flex-1 w-full min-h-[220px] relative">
+                        <svg class="w-full h-full" id="equity-svg" viewBox="0 0 800 250" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="chart-glow" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#44e092" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="#44e092" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+                            <!-- Grid lines -->
+                            <line x1="0" y1="50" x2="800" y2="50" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                            <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                            <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                            <line x1="0" y1="200" x2="800" y2="200" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                            
+                            <!-- Area fill -->
+                            <path d="M 0 250 L 0 200 L 100 180 L 200 210 L 300 160 L 400 120 L 500 140 L 600 80 L 700 90 L 800 50 L 800 250 Z" fill="url(#chart-glow)" id="chart-area"/>
+                            
+                            <!-- The line path -->
+                            <path d="M 0 200 L 100 180 L 200 210 L 300 160 L 400 120 L 500 140 L 600 80 L 700 90 L 800 50" fill="none" stroke="#44e092" stroke-width="3" stroke-linecap="round" id="chart-line"/>
+                            
+                            <!-- Data dots -->
+                            <circle cx="0" cy="200" r="4" fill="#44e092"/>
+                            <circle cx="100" cy="180" r="4" fill="#44e092"/>
+                            <circle cx="200" cy="210" r="4" fill="#44e092"/>
+                            <circle cx="300" cy="160" r="4" fill="#44e092"/>
+                            <circle cx="400" cy="120" r="4" fill="#44e092"/>
+                            <circle cx="500" cy="140" r="4" fill="#44e092"/>
+                            <circle cx="600" cy="80" r="4" fill="#44e092"/>
+                            <circle cx="700" cy="90" r="4" fill="#44e092"/>
+                            <circle cx="800" cy="50" r="4" fill="#44e092"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Win/Loss Calendar -->
+                <div class="lg:col-span-4 glass-panel p-6 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="font-label-caps text-label-caps tracking-widest text-[11px] text-on-surface-variant mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[16px]">calendar_month</span>
+                            MONTHLY TRADE DENSITY
+                        </div>
+                        <div class="grid grid-cols-7 gap-2 text-center text-[10px] text-on-surface-variant font-label-caps mb-2">
+                            <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+                        </div>
+                        <div class="grid grid-cols-7 gap-2" id="calendar-grid">
+                            <!-- JS Will generate a grid of win/loss blocks -->
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-outline-variant flex justify-between items-center text-[11px] text-on-surface-variant">
+                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 bg-red-400 rounded-sm"></div>Loss Day</div>
+                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 bg-white/10 rounded-sm"></div>No Trade</div>
+                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 bg-emerald-700/60 rounded-sm"></div>Win Day</div>
+                        <div class="flex items-center gap-1.5"><div class="w-3 h-3 bg-emerald-400 rounded-sm"></div>Big Win</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trade Log Table Section -->
+            <div class="glass-panel rounded-2xl overflow-hidden">
+                <div class="p-6 border-b border-outline-variant flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <h3 class="font-headline-md text-headline-md text-white">TRADE LOGS</h3>
+                        <span class="px-2 py-0.5 bg-white/5 border border-white/10 text-on-surface-variant text-[10px] font-label-caps rounded-full" id="logs-count">10 Records Shown</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                        <button onclick="filterTrades('all', this)" class="bg-secondary/20 text-secondary border border-secondary/30 px-3 py-1 text-[11px] font-label-caps rounded-lg transition-all active:scale-[0.98] btn-filter">ALL</button>
+                        <button onclick="filterTrades('LONG', this)" class="bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-white px-3 py-1 text-[11px] font-label-caps rounded-lg transition-all active:scale-[0.98] btn-filter">LONGS</button>
+                        <button onclick="filterTrades('SHORT', this)" class="bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-white px-3 py-1 text-[11px] font-label-caps rounded-lg transition-all active:scale-[0.98] btn-filter">SHORTS</button>
+                        <button onclick="filterTrades('WIN', this)" class="bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-white px-3 py-1 text-[11px] font-label-caps rounded-lg transition-all active:scale-[0.98] btn-filter">WINS</button>
+                        <button onclick="filterTrades('LOSS', this)" class="bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-white px-3 py-1 text-[11px] font-label-caps rounded-lg transition-all active:scale-[0.98] btn-filter">LOSSES</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-outline-variant bg-white/5 font-label-caps text-[10px] text-on-surface-variant">
+                                <th class="p-4">SYMBOL</th>
+                                <th class="p-4">TYPE</th>
+                                <th class="p-4 text-right">ENTRY</th>
+                                <th class="p-4 text-right">EXIT</th>
+                                <th class="p-4 text-right">P&L</th>
+                                <th class="p-4">STATUS</th>
+                                <th class="p-4">DATE/TIME</th>
+                                <th class="p-4 text-right">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trade-log-body" class="divide-y divide-outline-variant/30 font-body-sm text-[13px]">
+                            <!-- Generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Mobile Bottom Nav -->
+        <nav class="md:hidden flex items-center justify-around h-16 bg-surface-container-low border-t border-outline-variant shrink-0">
+            <div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='index.html'">
+                <span class="material-symbols-outlined">home</span>
+                <span class="text-[9px] font-label-caps">HOME</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='scanner.html'">
+                <span class="material-symbols-outlined">analytics</span>
+                <span class="text-[9px] font-label-caps">SCANNER</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='analysis.html'">
+                <span class="material-symbols-outlined">bar_chart</span>
+                <span class="text-[9px] font-label-caps">CHART</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 text-on-surface-variant cursor-pointer" onclick="window.location.href='options.html'">
+                <span class="material-symbols-outlined">add_circle</span>
+                <span class="text-[9px] font-label-caps">TRADE</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 text-tertiary cursor-pointer" onclick="window.location.href='journal.html'">
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-[9px] font-label-caps">PROFILE</span>
+            </div>
+        </nav>
+    </main>
+
+    <!-- NEW TRADE MODAL -->
+    <div id="newTradeModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-md p-6 rounded-2xl border border-white/10 shadow-2xl relative">
+            <h3 class="text-xl font-black text-white mb-6 font-display-lg">RECORD NEW TRADE</h3>
+            
+            <form id="tradeForm" onsubmit="addTrade(event)" class="space-y-4">
+                <div>
+                    <label class="block text-[10px] font-label-caps text-on-surface-variant mb-1 uppercase">Symbol</label>
+                    <input type="text" id="form-symbol" required class="w-full bg-black/40 border border-outline-variant rounded-lg p-2 text-white font-data-tabular uppercase focus:outline-none focus:border-secondary" placeholder="e.g. RELIANCE"/>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-label-caps text-on-surface-variant mb-1 uppercase">Direction</label>
+                        <select id="form-direction" class="w-full bg-black/40 border border-outline-variant rounded-lg p-2 text-white font-label-caps focus:outline-none focus:border-secondary">
+                            <option value="LONG">LONG (BUY)</option>
+                            <option value="SHORT">SHORT (SELL)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-label-caps text-on-surface-variant mb-1 uppercase">Status</label>
+                        <select id="form-status" class="w-full bg-black/40 border border-outline-variant rounded-lg p-2 text-white font-label-caps focus:outline-none focus:border-secondary">
+                            <option value="WIN">WIN</option>
+                            <option value="LOSS">LOSS</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-label-caps text-on-surface-variant mb-1 uppercase">Entry Price</label>
+                        <input type="number" step="0.01" id="form-entry" required class="w-full bg-black/40 border border-outline-variant rounded-lg p-2 text-white font-data-tabular focus:outline-none focus:border-secondary" placeholder="0.00"/>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-label-caps text-on-surface-variant mb-1 uppercase">Exit Price</label>
+                        <input type="number" step="0.01" id="form-exit" required class="w-full bg-black/40 border border-outline-variant rounded-lg p-2 text-white font-data-tabular focus:outline-none focus:border-secondary" placeholder="0.00"/>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-label-caps text-on-surface-variant mb-1 uppercase">P&L Amount ($)</label>
+                    <input type="number" step="0.01" id="form-pnl" required class="w-full bg-black/40 border border-outline-variant rounded-lg p-2 text-white font-data-tabular focus:outline-none focus:border-secondary" placeholder="e.g. +450 or -120"/>
+                </div>
+                <div class="flex gap-4 pt-4">
+                    <button type="button" onclick="document.getElementById('newTradeModal').classList.add('hidden')" class="flex-1 border border-outline-variant hover:bg-white/5 py-2.5 rounded-lg text-[11px] font-label-caps transition-all active:scale-[0.98]">CANCEL</button>
+                    <button type="submit" class="flex-1 bg-secondary text-on-secondary-fixed py-2.5 rounded-lg text-[11px] font-label-caps shadow-lg shadow-secondary/20 transition-all active:scale-[0.98]">SAVE TRADE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mock Initial Trades Database
+        let tradesData = [
+            { id: 1, symbol: "RELIANCE", type: "LONG", entry: 2945.50, exit: 3120.00, pnl: 1420.00, status: "WIN", date: "2026-07-05 14:32" },
+            { id: 2, symbol: "TCS", type: "SHORT", entry: 4120.00, exit: 3850.00, pnl: 2700.00, status: "WIN", date: "2026-07-05 11:15" },
+            { id: 3, symbol: "HDFCBANK", type: "LONG", entry: 1452.00, exit: 1438.00, pnl: -640.00, status: "LOSS", date: "2026-07-04 15:10" },
+            { id: 4, symbol: "INFY", type: "LONG", entry: 1620.00, exit: 1710.00, pnl: 900.00, status: "WIN", date: "2026-07-03 10:45" },
+            { id: 5, symbol: "ICICIBANK", type: "LONG", entry: 1085.00, exit: 1120.00, pnl: 1250.00, status: "WIN", date: "2026-07-02 12:20" },
+            { id: 6, symbol: "SBIN", type: "SHORT", entry: 785.00, exit: 792.00, pnl: -350.00, status: "LOSS", date: "2026-07-02 09:30" },
+            { id: 7, symbol: "BHARTIARTL", type: "LONG", entry: 1290.00, exit: 1350.00, pnl: 1800.00, status: "WIN", date: "2026-06-30 14:10" },
+            { id: 8, symbol: "LTIM", type: "SHORT", entry: 4890.00, exit: 4950.00, pnl: -1200.00, status: "LOSS", date: "2026-06-29 11:05" },
+            { id: 9, symbol: "AXISBANK", type: "LONG", entry: 1120.00, exit: 1175.00, pnl: 2200.00, status: "WIN", date: "2026-06-28 15:40" },
+            { id: 10, symbol: "KOTAKBANK", type: "SHORT", entry: 1760.00, exit: 1720.00, pnl: 1600.00, status: "WIN", date: "2026-06-26 12:50" }
+        ];
+
+        let currentFilter = 'all';
+
+        // Initialize Page Data
+        function initPage() {
+            renderTrades();
+            renderCalendar();
+            updateStats();
+            renderEquityChart();
+        }
+
+        // Render Trade Logs Table
+        function renderTrades() {
+            const tbody = document.getElementById('trade-log-body');
+            tbody.innerHTML = '';
+
+            const filtered = tradesData.filter(t => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'LONG') return t.type === 'LONG';
+                if (currentFilter === 'SHORT') return t.type === 'SHORT';
+                if (currentFilter === 'WIN') return t.status === 'WIN';
+                if (currentFilter === 'LOSS') return t.status === 'LOSS';
+                return true;
+            });
+
+            document.getElementById('logs-count').textContent = `${filtered.length} Records Shown`;
+
+            filtered.forEach(trade => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-outline-variant/20 hover:bg-white/5 transition-colors';
+                
+                const isWin = trade.status === 'WIN';
+                const pnlClass = isWin ? 'text-tertiary' : 'text-error';
+                const pnlPrefix = trade.pnl > 0 ? '+' : '';
+
+                tr.innerHTML = `
+                    <td class="p-4 font-bold text-white cursor-pointer hover:text-secondary transition-all" onclick="window.location.href='analysis.html?symbol=${trade.symbol}'">${trade.symbol}</td>
+                    <td class="p-4"><span class="px-2 py-0.5 rounded text-[10px] font-label-caps ${trade.type === 'LONG' ? 'bg-secondary/15 text-secondary' : 'bg-orange-500/10 text-orange-400'}">${trade.type}</span></td>
+                    <td class="p-4 text-right font-data-tabular">${trade.entry.toFixed(2)}</td>
+                    <td class="p-4 text-right font-data-tabular">${trade.exit.toFixed(2)}</td>
+                    <td class="p-4 text-right font-data-tabular ${pnlClass}">${pnlPrefix}$${trade.pnl.toFixed(2)}</td>
+                    <td class="p-4"><span class="px-2.5 py-0.5 rounded-full text-[9px] font-label-caps ${isWin ? 'bg-tertiary/15 text-tertiary border border-tertiary/20' : 'bg-error/15 text-error border border-error/20'}">${trade.status}</span></td>
+                    <td class="p-4 text-on-surface-variant text-[11px] font-data-tabular">${trade.date}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="deleteTrade(${trade.id})" class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors text-lg">delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Render Calendar Trade Density
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
+            // Generate last 28 days calendar blocks (arbitrary mock win/loss density)
+            const daysPattern = [
+                'big-win', 'no-trade', 'win', 'loss', 'win', 'win', 'no-trade',
+                'loss', 'win', 'big-win', 'loss', 'win', 'no-trade', 'win',
+                'win', 'loss', 'no-trade', 'big-win', 'win', 'win', 'loss',
+                'win', 'no-trade', 'win', 'loss', 'win', 'big-win', 'win'
+            ];
+
+            daysPattern.forEach((day, index) => {
+                const cell = document.createElement('div');
+                cell.className = 'aspect-square rounded-md transition-all duration-300 relative group cursor-pointer hover:scale-105';
+                
+                let bgClass = 'bg-white/5 border border-white/5';
+                let tooltipText = `Day ${index + 1}: No Trade`;
+
+                if (day === 'win') {
+                    bgClass = 'bg-emerald-700/60 border border-emerald-600/40 shadow-[0_0_10px_rgba(16,185,129,0.15)]';
+                    tooltipText = `Day ${index + 1}: +$450.00`;
+                } else if (day === 'big-win') {
+                    bgClass = 'bg-emerald-400 border border-emerald-300/40 shadow-[0_0_12px_rgba(16,185,129,0.4)]';
+                    tooltipText = `Day ${index + 1}: +$1,600.00`;
+                } else if (day === 'loss') {
+                    bgClass = 'bg-red-500/30 border border-red-500/20';
+                    tooltipText = `Day ${index + 1}: -$320.00`;
+                }
+
+                cell.className += ` ${bgClass}`;
+                cell.innerHTML = `
+                    <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-surface-container-highest border border-outline-variant text-[10px] rounded text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 font-data-tabular">
+                        ${tooltipText}
+                    </div>
+                `;
+                grid.appendChild(cell);
+            });
+        }
+
+        // Update Stats Cards
+        function updateStats() {
+            let total = tradesData.length;
+            let wins = tradesData.filter(t => t.status === 'WIN').length;
+            let losses = total - wins;
+            let winRateVal = total > 0 ? (wins / total) * 100 : 0;
+            
+            let netPnlVal = tradesData.reduce((acc, t) => acc + t.pnl, 0);
+
+            // Gross Wins / Gross Losses for Profit Factor
+            let grossWins = tradesData.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
+            let grossLosses = Math.abs(tradesData.filter(t => t.pnl < 0).reduce((acc, t) => acc + t.pnl, 0));
+            let profitFactorVal = grossLosses > 0 ? (grossWins / grossLosses) : grossWins;
+
+            document.getElementById('total-trades').textContent = total;
+            document.getElementById('win-rate').textContent = `${winRateVal.toFixed(1)}%`;
+            document.getElementById('net-pnl').textContent = `${netPnlVal >= 0 ? '+' : '-'}$${Math.abs(netPnlVal).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            
+            const netCard = document.getElementById('net-pnl');
+            if (netPnlVal >= 0) {
+                netCard.className = netCard.className.replace('text-error', 'text-tertiary').replace('text-white', 'text-tertiary');
+            } else {
+                netCard.className = netCard.className.replace('text-tertiary', 'text-error').replace('text-white', 'text-error');
+            }
+
+            document.getElementById('profit-factor').textContent = profitFactorVal.toFixed(2);
+            document.getElementById('final-equity').textContent = `$${(50000 + netPnlVal).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        }
+
+        // Render Dynamic Equity Line Chart SVG
+        function renderEquityChart() {
+            let base = 50000;
+            let points = [base];
+            let current = base;
+
+            // Sort trades chronologically to build equity path
+            const reversedTrades = [...tradesData].reverse();
+            reversedTrades.forEach(t => {
+                current += t.pnl;
+                points.push(current);
+            });
+
+            const svg = document.getElementById('equity-svg');
+            const svgWidth = 800;
+            const svgHeight = 250;
+            const padding = 20;
+
+            const minEquity = Math.min(...points);
+            const maxEquity = Math.max(...points);
+            const range = (maxEquity - minEquity) || 1;
+
+            const graphWidth = svgWidth;
+            const graphHeight = svgHeight - padding * 2;
+
+            let pathPoints = [];
+            let fillPoints = [];
+
+            points.forEach((val, index) => {
+                const x = (index / (points.length - 1)) * svgWidth;
+                // invert y-axis
+                const y = padding + (graphHeight - ((val - minEquity) / range) * graphHeight);
+                pathPoints.push(`${x} ${y}`);
+                fillPoints.push(`${x} ${y}`);
+            });
+
+            const lineD = "M " + pathPoints.join(" L ");
+            const fillD = lineD + ` L ${svgWidth} ${svgHeight} L 0 ${svgHeight} Z`;
+
+            document.getElementById('chart-line').setAttribute('d', lineD);
+            document.getElementById('chart-area').setAttribute('d', fillD);
+
+            // Re-render dots
+            // Remove old dots
+            svg.querySelectorAll('circle').forEach(c => c.remove());
+            points.forEach((val, index) => {
+                const x = (index / (points.length - 1)) * svgWidth;
+                const y = padding + (graphHeight - ((val - minEquity) / range) * graphHeight);
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", x);
+                circle.setAttribute("cy", y);
+                circle.setAttribute("r", "5");
+                circle.setAttribute("fill", "#44e092");
+                circle.setAttribute("stroke", "#0B0E11");
+                circle.setAttribute("stroke-width", "2");
+                circle.setAttribute("style", "cursor: pointer;");
+                
+                // Add simple hover value tooltip
+                const title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+                title.textContent = `Equity: $${val.toFixed(2)}`;
+                circle.appendChild(title);
+
+                svg.appendChild(circle);
+            });
+        }
+
+        // Filter Function
+        function filterTrades(filterType, btn) {
+            currentFilter = filterType;
+            
+            // Update filter button visuals
+            document.querySelectorAll('.btn-filter').forEach(b => {
+                b.className = b.className.replace('bg-secondary/20 text-secondary border border-secondary/30', 'bg-white/5 text-on-surface-variant');
+                b.className += ' hover:bg-white/10 hover:text-white';
+            });
+
+            btn.className = btn.className.replace('bg-white/5 text-on-surface-variant hover:bg-white/10 hover:text-white', 'bg-secondary/20 text-secondary border border-secondary/30');
+
+            renderTrades();
+        }
+
+        // Delete Trade
+        function deleteTrade(id) {
+            tradesData = tradesData.filter(t => t.id !== id);
+            renderTrades();
+            updateStats();
+            renderEquityChart();
+        }
+
+        // Add Manual Trade Form Submit
+        function addTrade(e) {
+            e.preventDefault();
+            
+            const symbol = document.getElementById('form-symbol').value.toUpperCase();
+            const direction = document.getElementById('form-direction').value;
+            const status = document.getElementById('form-status').value;
+            const entry = parseFloat(document.getElementById('form-entry').value);
+            const exit = parseFloat(document.getElementById('form-exit').value);
+            const pnl = parseFloat(document.getElementById('form-pnl').value);
+            
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            const newTrade = {
+                id: Date.now(),
+                symbol,
+                type: direction,
+                entry,
+                exit,
+                pnl,
+                status,
+                date: dateStr
+            };
+
+            tradesData.unshift(newTrade);
+            
+            // Reset Form and Hide Modal
+            document.getElementById('tradeForm').reset();
+            document.getElementById('newTradeModal').classList.add('hidden');
+
+            // Re-render
+            initPage();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initPage();
+            
+            // Simulating Live Ticker Updates
+            const ticker = document.getElementById('ticker-text');
+            setInterval(() => {
+                const nifty = (22450.20 + (Math.random() * 10 - 5)).toFixed(2);
+                const change = (1.2 + (Math.random() * 0.1 - 0.05)).toFixed(2);
+                ticker.textContent = `NIFTY: ${nifty} (+${change}%) | SENSEX: 74,120.45 (+0.8%) | VIX: 12.4 (-2.1%)`;
+            }, 3000);
+        });
+
+        // 3D Background animation container
+        (function() {
+            const canvas = document.getElementById('shader-canvas');
+            if(!canvas) return;
+            const gl = canvas.getContext('webgl');
+            if(!gl) return;
+
+            // Vert shader
+            const vertexShaderSource = `
+                attribute vec2 position;
+                varying vec2 v_texCoord;
+                void main() {
+                    v_texCoord = position * 0.5 + 0.5;
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // Frag shader
+            const fragmentShaderSource = `
+                precision highp float;
+                uniform float u_time;
+                uniform vec2 u_resolution;
+                uniform vec2 u_mouse;
+                varying vec2 v_texCoord;
+
+                void main() {
+                    vec2 uv = v_texCoord;
+                    vec2 mouse = u_mouse / u_resolution;
+                    
+                    // Perspective grid background
+                    vec3 color = vec3(0.01, 0.01, 0.02); // Deep base
+                    
+                    // Moving data-line pulses
+                    float scanline = sin(uv.y * 120.0 - u_time * 1.5) * 0.015;
+                    color += vec3(0.0, 0.5, 0.8) * scanline * 0.1;
+                    
+                    // Atmospheric mouse glow
+                    float dist = length(uv - mouse);
+                    float glow = exp(-dist * 5.0) * 0.1;
+                    color += vec3(0.0, 0.6, 0.4) * glow;
+                    
+                    // Vignette
+                    float vignette = smoothstep(1.2, 0.4, length(uv - 0.5));
+                    color *= vignette;
+                    
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `;
+
+            const compileShader = (type, source) => {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                return shader;
+            };
+
+            const program = gl.createProgram();
+            gl.attachShader(program, compileShader(gl.VERTEX_SHADER, vertexShaderSource));
+            gl.attachShader(program, compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource));
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+
+            const positionLocation = gl.getAttribLocation(program, "position");
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            const timeLocation = gl.getUniformLocation(program, "u_time");
+            const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+            const mouseLocation = gl.getUniformLocation(program, "u_mouse");
+
+            let mouseX = 0, mouseY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = window.innerHeight - e.clientY;
+            });
+
+            const resizeCanvas = () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                gl.viewport(0, 0, canvas.width, canvas.height);
+            };
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            const renderShader = (time) => {
+                gl.uniform1f(timeLocation, time * 0.001);
+                gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+                gl.uniform2f(mouseLocation, mouseX, mouseY);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                requestAnimationFrame(renderShader);
+            };
+            requestAnimationFrame(renderShader);
+        })();
+
+        // 3D Particles Background (ThreeJS)
+        (function() {
+            const container = document.getElementById('threejs-container');
+            if(!container || typeof THREE === 'undefined') return;
+            
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const group = new THREE.Group();
+            scene.add(group);
+            group.position.set(0, 0, -2);
+
+            // Floating Data Particles
+            const pCount = 200;
+            const pGeom = new THREE.BufferGeometry();
+            const pPos = new Float32Array(pCount * 3);
+            for(let i=0; i<pCount*3; i++) pPos[i] = (Math.random() - 0.5) * 15;
+            pGeom.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            const pMat = new THREE.PointsMaterial({ color: 0x00ffcc, size: 0.04, transparent: true, opacity: 0.25 });
+            const particles = new THREE.Points(pGeom, pMat);
+            group.add(particles);
+
+            scene.add(new THREE.AmbientLight(0x404040));
+            camera.position.z = 8;
+
+            let mouseX = 0, mouseY = 0;
+            window.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth - 0.5) * 0.3;
+                mouseY = (e.clientY / window.innerHeight - 0.5) * 0.3;
+            });
+
+            const animate = () => {
+                requestAnimationFrame(animate);
+                particles.rotation.y += 0.0006;
+                particles.rotation.x += 0.0002;
+                group.rotation.x += (mouseY - group.rotation.x) * 0.05;
+                group.rotation.y += (mouseX - group.rotation.y) * 0.05;
+                renderer.render(scene, camera);
+            };
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            animate();
+        })();
+    </script>
+</body>
+</html>
