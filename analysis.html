@@ -306,9 +306,9 @@
 <span class="material-symbols-outlined text-[18px] text-outline hover:text-secondary cursor-pointer transition-colors">filter_list</span>
 </div>
 <div class="flex gap-1 p-1 bg-surface-container-lowest/60 rounded-lg backdrop-blur-md border border-white/5">
-<button class="flex-1 font-label-caps text-[10px] py-1.5 bg-secondary/20 text-secondary rounded shadow-[0_0_10px_rgba(173,198,255,0.1)]" onclick="window.location.href=\'analysis.html\'" style="cursor: pointer;">NIFTY 50</button>
-<button class="flex-1 font-label-caps text-[10px] py-1.5 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-colors rounded" onclick="window.location.href=\'analysis.html\'" style="cursor: pointer;">SENSEX</button>
-<button class="flex-1 font-label-caps text-[10px] py-1.5 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-colors rounded">FAVS</button>
+<button id="tab-nifty" class="flex-1 font-label-caps text-[10px] py-1.5 bg-secondary/20 text-secondary rounded shadow-[0_0_10px_rgba(173,198,255,0.1)] transition-all" onclick="switchMarketTab('NIFTY 50')">NIFTY 50</button>
+<button id="tab-sensex" class="flex-1 font-label-caps text-[10px] py-1.5 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all rounded" onclick="switchMarketTab('SENSEX')">SENSEX</button>
+<button id="tab-favs" class="flex-1 font-label-caps text-[10px] py-1.5 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all rounded" onclick="switchMarketTab('FAVS')">FAVS</button>
 </div>
 </div>
 <div class="flex-1 overflow-y-auto custom-scrollbar">
@@ -319,49 +319,9 @@
 <span class="text-right">CHG %</span>
 </div>
 <!-- Watchlist Items -->
-<div class="divide-y divide-outline-variant/20">
-<!-- Item Active -->
-<div class="grid grid-cols-3 px-4 py-3 stock-item-active cursor-pointer transition-all">
-<div class="flex flex-col">
-<span class="font-bold text-xs text-secondary drop-shadow-[0_0_8px_rgba(173,198,255,0.5)]">RELIANCE</span>
-<span class="text-[9px] text-secondary/60">NSE</span>
-</div>
-<div class="text-right font-data-tabular self-center text-on-surface font-medium">2,945.10</div>
-<div class="text-right font-data-tabular text-tertiary self-center font-bold drop-shadow-[0_0_4px_rgba(102,253,172,0.3)]">+1.45%</div>
-</div>
-<!-- Item 2 -->
-<div class="grid grid-cols-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors group border-l-2 border-transparent">
-<div class="flex flex-col">
-<span class="font-bold text-xs group-hover:text-secondary transition-colors">HDFC BANK</span>
-<span class="text-[9px] text-outline">NSE</span>
-</div>
-<div class="text-right font-data-tabular self-center text-on-surface">1,422.35</div>
-<div class="text-right font-data-tabular text-error self-center">-0.82%</div>
-</div>
-<!-- Item 3 -->
-<div class="grid grid-cols-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors group border-l-2 border-transparent">
-<div class="flex flex-col">
-<span class="font-bold text-xs group-hover:text-secondary transition-colors">TCS</span>
-<span class="text-[9px] text-outline">NSE</span>
-</div>
-<div class="text-right font-data-tabular self-center text-on-surface">3,988.40</div>
-<div class="text-right font-data-tabular text-tertiary self-center">+0.34%</div>
-</div>
-<script>
-    for(let i=0; i<10; i++) {
-        document.write(`
-            <div class="grid grid-cols-3 px-4 py-3 cursor-pointer hover:bg-white/5 transition-colors group border-l-2 border-transparent">
-                <div class="flex flex-col">
-                    <span class="font-bold text-xs group-hover:text-secondary transition-colors">STOCK_${i+100}</span>
-                    <span class="text-[9px] text-outline">NSE</span>
-                </div>
-                <div class="text-right font-data-tabular self-center text-on-surface">${(Math.random()*1000).toFixed(2)}</div>
-                <div class="text-right font-data-tabular ${Math.random() > 0.5 ? 'text-tertiary' : 'text-error'} self-center">${(Math.random()*2).toFixed(2)}%</div>
-            </div>
-        `);
-    }
-</script>
-</div>
+<div id="watchlist-container" class="divide-y divide-outline-variant/20">
+<!-- Injected dynamically -->
+</div></div>
 </div>
 <div class="p-4 border-t border-outline-variant/50 bg-surface-container-lowest/40 backdrop-blur-md">
 <button class="w-full bg-secondary/10 border border-secondary/30 text-secondary py-2.5 font-label-caps rounded-lg hover:bg-secondary/20 hover:border-secondary/50 active:scale-[0.98] transition-all shadow-[0_0_15px_rgba(2,100,211,0.15)] flex items-center justify-center gap-2">
@@ -425,12 +385,12 @@
 <div id="threejs-container"></div>
 <canvas id="candlestick-chart" class="absolute inset-0 w-full h-full z-10 pointer-events-auto" style="mix-blend-mode: screen;"></canvas>
 <!-- Timeframe Selector -->
-<div class="absolute top-4 left-6 z-20 glass-panel-glow rounded-lg p-1.5 flex gap-1 shadow-lg">
-<button class="px-3 py-1 text-[11px] font-bold rounded bg-secondary text-on-secondary shadow-[0_0_10px_rgba(2,100,211,0.3)]">5m</button>
-<button class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-colors">15m</button>
-<button class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-colors">1h</button>
-<button class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-colors">4h</button>
-<button class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-colors">1D</button>
+<div id="timeframe-buttons-top" class="absolute top-4 left-6 z-20 glass-panel-glow rounded-lg p-1.5 flex gap-1 shadow-lg">
+<button onclick="switchTimeframe('5m')" class="px-3 py-1 text-[11px] font-bold rounded bg-secondary text-on-secondary shadow-[0_0_10px_rgba(2,100,211,0.3)] transition-all">5m</button>
+<button onclick="switchTimeframe('15m')" class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-all">15m</button>
+<button onclick="switchTimeframe('1h')" class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-all">1h</button>
+<button onclick="switchTimeframe('4h')" class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-all">4h</button>
+<button onclick="switchTimeframe('1D')" class="px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-all">1D</button>
 <div class="w-px h-5 bg-outline-variant mx-2 my-auto"></div>
 <button class="flex items-center gap-1.5 px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-colors">
 <span class="material-symbols-outlined text-[16px]">layers</span> Deep Viz
@@ -512,39 +472,8 @@
 <h3 class="font-label-caps text-[11px] text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
 <span class="material-symbols-outlined text-[14px]">view_timeline</span> MTF Matrix
 </h3>
-<div class="grid grid-cols-4 gap-2.5">
-<div class="flex flex-col items-center p-1.5 bg-surface-container-high/50 rounded border border-white/5">
-<span class="text-[9px] text-outline font-data-tabular">1m</span>
-<span class="material-symbols-outlined text-tertiary text-[18px]">trending_up</span>
-</div>
-<div class="flex flex-col items-center p-1.5 bg-secondary/10 rounded border border-secondary/40 shadow-[0_0_10px_rgba(173,198,255,0.15)]">
-<span class="text-[9px] text-secondary font-bold font-data-tabular">5m</span>
-<span class="material-symbols-outlined text-tertiary text-[18px]">trending_up</span>
-</div>
-<div class="flex flex-col items-center p-1.5 bg-surface-container-high/50 rounded border border-white/5">
-<span class="text-[9px] text-outline font-data-tabular">15m</span>
-<span class="material-symbols-outlined text-tertiary text-[18px]">trending_up</span>
-</div>
-<div class="flex flex-col items-center p-1.5 bg-surface-container-high/50 rounded border border-white/5">
-<span class="text-[9px] text-outline font-data-tabular">1h</span>
-<span class="material-symbols-outlined text-on-surface-variant text-[18px]">horizontal_rule</span>
-</div>
-<div class="flex flex-col items-center p-1.5 bg-surface-container-high/50 rounded border border-white/5">
-<span class="text-[9px] text-outline font-data-tabular">4h</span>
-<span class="material-symbols-outlined text-on-surface-variant text-[18px]">horizontal_rule</span>
-</div>
-<div class="flex flex-col items-center p-1.5 bg-surface-container-high/50 rounded border border-white/5">
-<span class="text-[9px] text-outline font-data-tabular">1D</span>
-<span class="material-symbols-outlined text-tertiary text-[18px]">trending_up</span>
-</div>
-<div class="flex flex-col items-center p-1.5 bg-surface-container-high/50 rounded border border-white/5">
-<span class="text-[9px] text-outline font-data-tabular">1W</span>
-<span class="material-symbols-outlined text-tertiary text-[18px]">trending_up</span>
-</div>
-<div class="flex flex-col items-center p-1.5 bg-surface-container-high/50 rounded border border-white/5">
-<span class="text-[9px] text-outline font-data-tabular">1M</span>
-<span class="material-symbols-outlined text-error text-[18px]">trending_down</span>
-</div>
+<div id="mtf-matrix-container" class="grid grid-cols-4 gap-2.5">
+<!-- Dynamic MTF matrix boxes injected here -->
 </div>
 </div>
 <!-- Narrative Analysis -->
@@ -866,86 +795,30 @@ void main() {
     })();
 
     // UI Interactions & Micro-interactions
-    // Stock Database
+    // Markets and Watchlists Databases
+    const marketsDatabase = {
+        'NIFTY 50': ['RELIANCE', 'HDFC BANK', 'TCS', 'INFY', 'ICICI BANK', 'SBIN', 'L&T', 'BHARTI AIRTEL'],
+        'SENSEX': ['SBIN', 'ICICI BANK', 'AXIS BANK', 'L&T', 'TATA MOTORS', 'MARUTI', 'NTPC', 'SUN PHARMA'],
+        'FAVS': ['RELIANCE', 'TCS', 'HDFC BANK', 'SBIN']
+    };
+
     const stockDatabase = {
-        'RELIANCE': {
-            name: 'RELIANCE INDUSTRIES',
-            exchangeSymbol: 'NSE: RELIANCE',
-            price: 2945.10,
-            high: 2968.00,
-            low: 2901.45,
-            volume: '4.82M',
-            avgVol: '3.15M',
-            confluence: 8.4,
-            confluenceText: 'HIGH SYNC',
-            confluenceOffset: '16',
-            patternName: 'Bullish Engulfing',
-            patternZone: 'Value Area High',
-            volumeConfirmText: 'Strong Anomaly',
-            volumeConfirmWidth: '85%',
-            indicators: { vwap: '2,938.90', ema20: '2,932.40', ema50: '2,910.15' },
-            targetPrice: '3,045',
-            entryPrice: '2,952',
-            invalidationPrice: '2,924',
-            targetTop: '20%',
-            entryTop: '50%',
-            invalBottom: '15%'
-        },
-        'HDFC BANK': {
-            name: 'HDFC BANK LIMITED',
-            exchangeSymbol: 'NSE: HDFCBANK',
-            price: 1422.35,
-            high: 1438.00,
-            low: 1415.20,
-            volume: '8.45M',
-            avgVol: '6.78M',
-            confluence: 7.2,
-            confluenceText: 'STABLE TREND',
-            confluenceOffset: '28',
-            patternName: 'Bullish Pennant',
-            patternZone: 'EMA 20 Support',
-            volumeConfirmText: 'Confirming Vol',
-            volumeConfirmWidth: '72%',
-            indicators: { vwap: '1,424.10', ema20: '1,421.50', ema50: '1,412.30' },
-            targetPrice: '1,540',
-            entryPrice: '1,452',
-            invalidationPrice: '1,438',
-            targetTop: '25%',
-            entryTop: '60%',
-            invalBottom: '20%'
-        },
-        'TCS': {
-            name: 'TATA CONSULTANCY SERVICES',
-            exchangeSymbol: 'NSE: TCS',
-            price: 3988.40,
-            high: 4020.00,
-            low: 3950.00,
-            volume: '2.12M',
-            avgVol: '1.95M',
-            confluence: 6.1,
-            confluenceText: 'MEAN REVERSION',
-            confluenceOffset: '39',
-            patternName: 'Mean Reversion',
-            patternZone: 'Overbought Limit',
-            volumeConfirmText: 'Declining Vol',
-            volumeConfirmWidth: '40%',
-            indicators: { vwap: '3,995.20', ema20: '4,010.50', ema50: '3,975.00' },
-            targetPrice: '3,850',
-            entryPrice: '4,120',
-            invalidationPrice: '4,195',
-            targetTop: '75%',
-            entryTop: '35%',
-            invalBottom: '65%'
-        }
+        'RELIANCE': { name: 'RELIANCE INDUSTRIES', exchangeSymbol: 'NSE: RELIANCE', price: 2945.10, high: 2968.00, low: 2901.45, volume: '4.82M', avgVol: '3.15M', confluence: 8.4, confluenceText: 'HIGH SYNC', confluenceOffset: '16', patternName: 'Bullish Engulfing', patternZone: 'Value Area High', volumeConfirmText: 'Strong Anomaly', volumeConfirmWidth: '85%', indicators: { vwap: '2,938.90', ema20: '2,932.40', ema50: '2,910.15' }, targetPrice: '3,045', entryPrice: '2,952', invalidationPrice: '2,924', targetTop: '20%', entryTop: '50%', invalBottom: '15%' },
+        'HDFC BANK': { name: 'HDFC BANK LIMITED', exchangeSymbol: 'NSE: HDFCBANK', price: 1422.35, high: 1438.00, low: 1415.20, volume: '8.45M', avgVol: '6.78M', confluence: 7.2, confluenceText: 'STABLE TREND', confluenceOffset: '28', patternName: 'Bullish Pennant', patternZone: 'EMA 20 Support', volumeConfirmText: 'Confirming Vol', volumeConfirmWidth: '72%', indicators: { vwap: '1,424.10', ema20: '1,421.50', ema50: '1,412.30' }, targetPrice: '1,540', entryPrice: '1,452', invalidationPrice: '1,438', targetTop: '25%', entryTop: '60%', invalBottom: '20%' },
+        'TCS': { name: 'TATA CONSULTANCY SERVICES', exchangeSymbol: 'NSE: TCS', price: 3988.40, high: 4020.00, low: 3950.00, volume: '2.12M', avgVol: '1.95M', confluence: 6.1, confluenceText: 'MEAN REVERSION', confluenceOffset: '39', patternName: 'Mean Reversion', patternZone: 'Overbought Limit', volumeConfirmText: 'Declining Vol', volumeConfirmWidth: '40%', indicators: { vwap: '3,995.20', ema20: '4,010.50', ema50: '3,975.00' }, targetPrice: '3,850', entryPrice: '4,120', invalidationPrice: '4,195', targetTop: '75%', entryTop: '35%', invalBottom: '65%' }
     };
 
     let activeSymbol = 'RELIANCE';
-    const urlParams = new URLSearchParams(window.location.search);
-    const symbolParam = urlParams.get('symbol');
-    if (symbolParam) {
-        activeSymbol = symbolParam.toUpperCase().replace('_', ' ');
-    }
+    let activeMarketTab = 'NIFTY 50';
+    let activeTimeframe = '5m';
     const candleCache = {};
+
+    // Drag to scroll variables
+    let scrollOffset = 0; // Number of candles scrolled back in time
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartOffset = 0;
+    const viewportCount = 35; // Number of candles visible in viewport
 
     function getOrCreateStock(symbol) {
         if (stockDatabase[symbol]) return stockDatabase[symbol];
@@ -956,7 +829,7 @@ void main() {
         
         stockDatabase[symbol] = {
             name: `${symbol} CORP`,
-            exchangeSymbol: `NSE: ${symbol}`,
+            exchangeSymbol: `NSE: ${symbol.replace(' ', '_')}`,
             price: basePrice,
             high: basePrice * 1.02,
             low: basePrice * 0.98,
@@ -984,17 +857,29 @@ void main() {
         return stockDatabase[symbol];
     }
 
-    // Generate Mock Candlestick Data
-    function generateCandles(symbol, basePrice, count = 40) {
-        if (candleCache[symbol]) return candleCache[symbol];
+    // Generate Mock Candlestick Data (100 candles for scrolling)
+    function generateCandles(symbol, basePrice, timeframe = '5m', count = 100) {
+        const cacheKey = `${symbol}_${timeframe}`;
+        if (candleCache[cacheKey]) return candleCache[cacheKey];
         
         let candles = [];
-        let currentPrice = basePrice * 0.98;
+        let currentPrice = basePrice * 0.95;
         let time = new Date();
-        time.setMinutes(time.getMinutes() - count * 5); // 5-minute ticks
+
+        // Adjust time delta based on timeframe
+        const setTimeDelta = (t, offset) => {
+            if (timeframe === '1m') t.setMinutes(t.getMinutes() - offset);
+            else if (timeframe === '5m') t.setMinutes(t.getMinutes() - offset * 5);
+            else if (timeframe === '15m') t.setMinutes(t.getMinutes() - offset * 15);
+            else if (timeframe === '1h') t.setHours(t.getHours() - offset);
+            else if (timeframe === '4h') t.setHours(t.getHours() - offset * 4);
+            else if (timeframe === '1D') t.setDate(t.getDate() - offset);
+        };
+        
+        setTimeDelta(time, count);
         
         for (let i = 0; i < count; i++) {
-            let change = (Math.random() * 0.014 - 0.0068) * currentPrice;
+            let change = (Math.random() * 0.016 - 0.0076) * currentPrice;
             let open = currentPrice;
             let close = currentPrice + change;
             let high = Math.max(open, close) + Math.random() * 0.003 * currentPrice;
@@ -1003,13 +888,20 @@ void main() {
             
             candles.push({ open, high, low, close, volume, time: new Date(time) });
             currentPrice = close;
-            time.setMinutes(time.getMinutes() + 5);
+            
+            // Increment time for next candle
+            if (timeframe === '1m') time.setMinutes(time.getMinutes() + 1);
+            else if (timeframe === '5m') time.setMinutes(time.getMinutes() + 5);
+            else if (timeframe === '15m') time.setMinutes(time.getMinutes() + 15);
+            else if (timeframe === '1h') time.setHours(time.getHours() + 1);
+            else if (timeframe === '4h') time.setHours(time.getHours() + 4);
+            else if (timeframe === '1D') time.setDate(time.getDate() + 1);
         }
-        candleCache[symbol] = candles;
+        candleCache[cacheKey] = candles;
         return candles;
     }
 
-    // Draw Candlestick Chart Function
+    // Render Candlestick Chart Function
     let mouseX = -1;
     let mouseY = -1;
 
@@ -1028,7 +920,12 @@ void main() {
         ctx.clearRect(0, 0, width, height);
 
         const stock = getOrCreateStock(symbol);
-        const candles = generateCandles(symbol, stock.price);
+        const allCandles = generateCandles(symbol, stock.price, activeTimeframe);
+        
+        // Slice based on scrollOffset
+        const startIdx = Math.max(0, allCandles.length - viewportCount - scrollOffset);
+        const endIdx = Math.max(viewportCount, allCandles.length - scrollOffset);
+        const candles = allCandles.slice(startIdx, endIdx);
         
         const prices = candles.map(c => [c.high, c.low]).flat();
         const minPrice = Math.min(...prices) * 0.998;
@@ -1065,7 +962,7 @@ void main() {
         }
         
         // Draw timeline
-        for (let i = 4; i < candles.length; i += 6) {
+        for (let i = 2; i < candles.length; i += 6) {
             const x = (i / candles.length) * (width - 60);
             ctx.beginPath();
             ctx.moveTo(x, 0);
@@ -1073,9 +970,17 @@ void main() {
             ctx.stroke();
             
             const t = candles[i].time;
-            const hours = String(t.getHours()).padStart(2, '0');
-            const mins = String(t.getMinutes()).padStart(2, '0');
-            ctx.fillText(`${hours}:${mins}`, x - 12, height - 12);
+            let timeLabel = "";
+            if (['1m', '5m', '15m', '1h'].includes(activeTimeframe)) {
+                const hours = String(t.getHours()).padStart(2, '0');
+                const mins = String(t.getMinutes()).padStart(2, '0');
+                timeLabel = `${hours}:${mins}`;
+            } else {
+                const day = t.getDate();
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                timeLabel = `${day} ${months[t.getMonth()]}`;
+            }
+            ctx.fillText(timeLabel, x - 12, height - 12);
         }
 
         // Draw volume bars at the bottom
@@ -1094,14 +999,14 @@ void main() {
             ctx.beginPath();
             ctx.strokeStyle = color;
             ctx.lineWidth = 1.5;
-            ctx.setLineDash([]);
             
             let first = true;
             candles.forEach((c, i) => {
-                if (i < period) return;
+                const globalIdx = startIdx + i;
+                if (globalIdx < period) return;
                 let sum = 0;
                 for (let j = 0; j < period; j++) {
-                    sum += candles[i - j].close;
+                    sum += allCandles[globalIdx - j].close;
                 }
                 const avg = sum / period;
                 const x = (i / candles.length) * (width - 60);
@@ -1226,8 +1131,7 @@ void main() {
         document.getElementById('stock-price-main').textContent = `₹${stock.price.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
         
         const priceChangeEl = document.getElementById('stock-price-change');
-        const isPositive = stock.price > stock.high * 0.97; // Arbitrary positive check
-        const sign = isPositive ? '+' : '-';
+        const isPositive = stock.price > stock.high * 0.97;
         const diff = Math.abs(stock.price * 0.015).toFixed(2);
         const percent = (isPositive ? 1.45 : -0.85).toFixed(2);
         
@@ -1281,22 +1185,197 @@ void main() {
         if(ring) ring.style.strokeDashoffset = stock.confluenceOffset;
     }
 
-    // Hook Mouse Event for Chart Canvas Crosshairs
+    // Render Watchlist dynamically based on selected tab
+    function renderWatchlist() {
+        const container = document.getElementById('watchlist-container');
+        if(!container) return;
+        
+        container.innerHTML = '';
+        const symbols = marketsDatabase[activeMarketTab];
+        
+        symbols.forEach(sym => {
+            const stock = getOrCreateStock(sym);
+            const isBullish = stock.price > stock.high * 0.97;
+            const diff = (isBullish ? 1.45 : -0.85).toFixed(2);
+            const isActive = sym === activeSymbol;
+            
+            const div = document.createElement('div');
+            div.className = `grid grid-cols-3 px-4 py-3 cursor-pointer transition-all ${isActive ? 'stock-item-active' : 'hover:bg-white/5 border-l-2 border-transparent'}`;
+            div.onclick = () => selectStock(sym);
+            
+            div.innerHTML = `
+                <div class="flex flex-col">
+                    <span class="font-bold text-xs ${isActive ? 'text-secondary drop-shadow-[0_0_8px_rgba(173,198,255,0.5)]' : 'group-hover:text-secondary'}">${sym}</span>
+                    <span class="text-[9px] ${isActive ? 'text-secondary/60' : 'text-outline'}">NSE</span>
+                </div>
+                <div class="text-right font-data-tabular self-center text-on-surface font-medium">${stock.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                <div class="text-right font-data-tabular ${isBullish ? 'text-tertiary font-bold drop-shadow-[0_0_4px_rgba(102,253,172,0.3)]' : 'text-error'} self-center">${isBullish ? '+' : ''}${diff}%</div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function selectStock(symbol) {
+        activeSymbol = symbol;
+        renderWatchlist();
+        
+        // Trigger Loading state
+        const loading = document.getElementById('loadingOverlay');
+        loading.style.opacity = '1';
+        loading.style.pointerEvents = 'all';
+        
+        // Animate confluence ring down
+        const ring = document.querySelector('.confluence-ring');
+        if(ring) ring.style.strokeDashoffset = '100';
+
+        setTimeout(() => {
+            loading.style.opacity = '0';
+            loading.style.pointerEvents = 'none';
+            
+            updateStockDOM(activeSymbol);
+            scrollOffset = 0; // reset scroll
+            renderChart(activeSymbol);
+        }, 1000);
+    }
+
+    function switchMarketTab(tab) {
+        activeMarketTab = tab;
+        
+        // Update active class on tab buttons
+        const tabs = {
+            'NIFTY 50': document.getElementById('tab-nifty'),
+            'SENSEX': document.getElementById('tab-sensex'),
+            'FAVS': document.getElementById('tab-favs')
+        };
+        
+        Object.keys(tabs).forEach(k => {
+            const btn = tabs[k];
+            if(k === tab) {
+                btn.className = 'flex-1 font-label-caps text-[10px] py-1.5 bg-secondary/20 text-secondary rounded shadow-[0_0_10px_rgba(173,198,255,0.1)] transition-all';
+            } else {
+                btn.className = 'flex-1 font-label-caps text-[10px] py-1.5 text-on-surface-variant hover:bg-white/5 hover:text-on-surface transition-all rounded';
+            }
+        });
+        
+        // If active symbol is not in newly selected tab, set it to the first symbol of that tab
+        const tabSymbols = marketsDatabase[tab];
+        if(!tabSymbols.includes(activeSymbol)) {
+            activeSymbol = tabSymbols[0];
+            updateStockDOM(activeSymbol);
+            scrollOffset = 0;
+        }
+        
+        renderWatchlist();
+        renderChart(activeSymbol);
+    }
+
+    // Render MTF Matrix grid
+    function renderMTFMatrix() {
+        const container = document.getElementById('mtf-matrix-container');
+        if(!container) return;
+        
+        const timeframes = ['1m', '5m', '15m', '1h', '4h', '1D', '1W', '1M'];
+        container.innerHTML = '';
+        
+        timeframes.forEach(tf => {
+            const isActive = tf === activeTimeframe;
+            const btn = document.createElement('div');
+            btn.className = `flex flex-col items-center p-1.5 rounded cursor-pointer transition-all border ${isActive ? 'bg-secondary/15 border-secondary/40 shadow-[0_0_10px_rgba(173,198,255,0.2)]' : 'bg-surface-container-high/50 border-white/5 hover:bg-white/5'}`;
+            btn.onclick = () => switchTimeframe(tf);
+            
+            // Random trend icons for visual completeness
+            let icon = 'trending_up';
+            let colorClass = 'text-tertiary';
+            if (tf === '1h' || tf === '4h') {
+                icon = 'horizontal_rule';
+                colorClass = 'text-on-surface-variant';
+            } else if (tf === '1M') {
+                icon = 'trending_down';
+                colorClass = 'text-error';
+            }
+            
+            btn.innerHTML = `
+                <span class="text-[9px] ${isActive ? 'text-secondary font-bold' : 'text-outline'} font-data-tabular">${tf}</span>
+                <span class="material-symbols-outlined ${colorClass} text-[18px]">${icon}</span>
+            `;
+            container.appendChild(btn);
+        });
+    }
+
+    function switchTimeframe(tf) {
+        activeTimeframe = tf;
+        
+        // Update top timeframe buttons
+        const topBtnContainer = document.getElementById('timeframe-buttons-top');
+        if(topBtnContainer) {
+            const btns = topBtnContainer.querySelectorAll('button');
+            btns.forEach(btn => {
+                if(btn.textContent.trim() === tf) {
+                    btn.className = 'px-3 py-1 text-[11px] font-bold rounded bg-secondary text-on-secondary shadow-[0_0_10px_rgba(2,100,211,0.3)] transition-all';
+                } else if(btn.textContent.trim() !== 'Deep Viz') {
+                    btn.className = 'px-3 py-1 text-[11px] font-bold rounded hover:bg-white/10 text-on-surface transition-all';
+                }
+            });
+        }
+        
+        renderMTFMatrix();
+        scrollOffset = 0; // reset scroll offset on timeframe change
+        renderChart(activeSymbol);
+    }
+
+    // Drag-to-scroll Event Listeners on Chart Canvas
     function initChartEvents() {
         const canvas = document.getElementById('candlestick-chart');
         if(!canvas) return;
 
-        canvas.addEventListener('mousemove', (e) => {
+        canvas.addEventListener('mousedown', (e) => {
             const rect = canvas.getBoundingClientRect();
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top;
-            renderChart(activeSymbol);
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Don't drag if on grid label margins
+            if(x < canvas.clientWidth - 60 && y < canvas.clientHeight - 25) {
+                isDragging = true;
+                dragStartX = e.clientX;
+                dragStartOffset = scrollOffset;
+                canvas.style.cursor = 'grabbing';
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            if (isDragging) {
+                const dx = e.clientX - dragStartX;
+                const candleWidth = (canvas.clientWidth - 60) / viewportCount;
+                const candleDelta = Math.round(dx / candleWidth);
+                
+                // Limit scroll offset between 0 and (totalCount - viewportCount)
+                const maxScroll = 100 - viewportCount;
+                scrollOffset = Math.max(0, Math.min(maxScroll, dragStartOffset + candleDelta));
+                renderChart(activeSymbol);
+            } else {
+                mouseX = x;
+                mouseY = y;
+                renderChart(activeSymbol);
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if(isDragging) {
+                isDragging = false;
+                canvas.style.cursor = 'crosshair';
+            }
         });
 
         canvas.addEventListener('mouseleave', () => {
-            mouseX = -1;
-            mouseY = -1;
-            renderChart(activeSymbol);
+            if(!isDragging) {
+                mouseX = -1;
+                mouseY = -1;
+                renderChart(activeSymbol);
+            }
         });
 
         window.addEventListener('resize', () => {
@@ -1305,103 +1384,39 @@ void main() {
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-        // Initial load
+        // Read URL queries
+        const urlParams = new URLSearchParams(window.location.search);
+        const symbolParam = urlParams.get('symbol');
+        if (symbolParam) {
+            const upper = symbolParam.toUpperCase().replace('_', ' ');
+            activeSymbol = upper;
+            
+            // Find tab containing this symbol
+            if(marketsDatabase['SENSEX'].includes(upper)) activeMarketTab = 'SENSEX';
+            else if(marketsDatabase['FAVS'].includes(upper)) activeMarketTab = 'FAVS';
+            else activeMarketTab = 'NIFTY 50';
+        }
+        
+        // Initial setup
         const loading = document.getElementById('loadingOverlay');
         loading.style.opacity = '1';
         loading.style.pointerEvents = 'all';
         
-        // Highlight the initial active stock in the sidebar
-        items.forEach(i => {
-            const s = i.querySelector('span.font-bold');
-            if (s && s.textContent.trim().replace('_', ' ') === activeSymbol) {
-                // remove active from others
-                items.forEach(x => {
-                    x.classList.remove('stock-item-active');
-                    x.classList.add('hover:bg-white/5', 'border-l-2', 'border-transparent');
-                    const sym = x.querySelector('span.font-bold');
-                    if(sym) sym.classList.replace('text-secondary', 'group-hover:text-secondary');
-                });
-                
-                // add active to this
-                i.classList.add('stock-item-active');
-                i.classList.remove('hover:bg-white/5', 'border-l-2', 'border-transparent');
-                s.classList.remove('group-hover:text-secondary');
-                s.classList.add('text-secondary', 'drop-shadow-[0_0_8px_rgba(173,198,255,0.5)]');
-            }
-        });
-
         setTimeout(() => {
             loading.style.opacity = '0';
             loading.style.pointerEvents = 'none';
             
+            switchMarketTab(activeMarketTab);
             updateStockDOM(activeSymbol);
+            renderWatchlist();
+            renderMTFMatrix();
             renderChart(activeSymbol);
             initChartEvents();
         }, 1200);
     });
 
-    // Sidebar items click management
-    const items = document.querySelectorAll('.divide-y > div');
-    items.forEach(item => {
-        item.addEventListener('click', () => {
-            // Get symbol name
-            const symbolEl = item.querySelector('span.font-bold');
-            if(!symbolEl) return;
-            const clickedSymbol = symbolEl.textContent.trim().replace('_', ' ');
-
-            // Remove active state from all
-            items.forEach(i => {
-                i.classList.remove('stock-item-active');
-                i.classList.add('hover:bg-white/5', 'border-l-2', 'border-transparent');
-                
-                const s = i.querySelector('span.font-bold');
-                if(s) s.classList.replace('text-secondary', 'group-hover:text-secondary');
-                const nse = i.querySelectorAll('span')[1];
-                if(nse) {
-                    nse.classList.remove('text-secondary/60');
-                    nse.classList.add('text-outline');
-                }
-            });
-            
-            // Add active state to clicked
-            item.classList.add('stock-item-active');
-            item.classList.remove('hover:bg-white/5', 'border-l-2', 'border-transparent');
-            
-            const symbol = item.querySelector('span.font-bold');
-            if(symbol) {
-                symbol.classList.remove('group-hover:text-secondary');
-                symbol.classList.add('text-secondary', 'drop-shadow-[0_0_8px_rgba(173,198,255,0.5)]');
-            }
-            const nse = item.querySelectorAll('span')[1];
-            if(nse) {
-                nse.classList.remove('text-outline');
-                nse.classList.add('text-secondary/60');
-            }
-            
-            // Trigger Loading state
-            const loading = document.getElementById('loadingOverlay');
-            loading.style.opacity = '1';
-            loading.style.pointerEvents = 'all';
-            
-            // Animate confluence ring down
-            const ring = document.querySelector('.confluence-ring');
-            if(ring) ring.style.strokeDashoffset = '100';
-
-            setTimeout(() => {
-                loading.style.opacity = '0';
-                loading.style.pointerEvents = 'none';
-                
-                // Switch symbol
-                activeSymbol = clickedSymbol;
-                updateStockDOM(activeSymbol);
-                renderChart(activeSymbol);
-            }, 1200);
-        });
-    });
-
     // Simulating Live Market Tickers and Candle updates
     setInterval(() => {
-        // Ticker prices
         const ticker = document.querySelector('.font-label-caps.text-label-caps.text-on-surface');
         if (ticker) {
             const nifty = (22450.20 + (Math.random() * 10 - 5)).toFixed(2);
@@ -1411,18 +1426,16 @@ void main() {
 
         // Simulating live ticking of the last candle close value
         const stock = getOrCreateStock(activeSymbol);
-        const candles = generateCandles(activeSymbol, stock.price);
+        const candles = generateCandles(activeSymbol, stock.price, activeTimeframe);
         if (candles && candles.length > 0) {
             const lastCandle = candles[candles.length - 1];
-            const tick = (Math.random() * 4 - 2); // tick up/down
+            const tick = (Math.random() * 4 - 2);
             lastCandle.close += tick;
             if (lastCandle.close > lastCandle.high) lastCandle.high = lastCandle.close;
             if (lastCandle.close < lastCandle.low) lastCandle.low = lastCandle.close;
             
-            // Sync main header price with the ticking last candle close price
             document.getElementById('stock-price-main').textContent = `₹${lastCandle.close.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             
-            // Redraw chart to show live tick movement
             renderChart(activeSymbol);
         }
     }, 2000);

@@ -348,8 +348,8 @@
 <div class="flex items-center gap-4">
 <h3 class="font-headline-md text-headline-md">Option Chain</h3>
 <div class="flex bg-background/40 rounded p-1 border border-outline-variant backdrop-blur-sm">
-<button class="px-3 py-1 font-label-caps text-tertiary bg-surface-variant/40 rounded">CALLS</button>
-<button class="px-3 py-1 font-label-caps text-on-surface-variant hover:text-on-surface">PUTS</button>
+<button id="btn-calls" onclick="switchOptionType('CALLS')" class="px-3 py-1 font-label-caps text-tertiary bg-surface-variant/40 rounded transition-all">CALLS</button>
+<button id="btn-puts" onclick="switchOptionType('PUTS')" class="px-3 py-1 font-label-caps text-on-surface-variant hover:text-on-surface rounded transition-all">PUTS</button>
 </div>
 </div>
 <div class="flex items-center gap-3">
@@ -376,74 +376,7 @@
 <th class="px-4 py-2 font-label-caps text-outline text-[10px]">ACTION</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-outline-variant">
-<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height bg-tertiary-container/5">
-<td class="px-4 py-2 font-data-tabular font-bold">2900</td>
-<td class="px-4 py-2 text-tertiary font-label-caps">CE (ITM)</td>
-<td class="px-4 py-2 font-data-tabular">78.20</td>
-<td class="px-4 py-2 font-data-tabular text-on-surface-variant">12,450</td>
-<td class="px-4 py-2 font-data-tabular">15.2</td>
-<td class="px-4 py-2 font-data-tabular">24.5</td>
-<td class="px-4 py-2 font-data-tabular text-tertiary">0.82</td>
-<td class="px-4 py-2 font-data-tabular text-error">-12.5</td>
-<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (ITM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-tertiary font-label-caps hover:underline">TRADE</button></td>
-</tr>
-<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height border-l-2 border-secondary-container bg-secondary-container/5">
-<td class="px-4 py-2 font-data-tabular font-bold">2950</td>
-<td class="px-4 py-2 text-secondary font-label-caps">CE (ATM)</td>
-<td class="px-4 py-2 font-data-tabular">42.50</td>
-<td class="px-4 py-2 font-data-tabular text-on-surface-variant">84,120</td>
-<td class="px-4 py-2 font-data-tabular">42.8</td>
-<td class="px-4 py-2 font-data-tabular">22.1</td>
-<td class="px-4 py-2 font-data-tabular text-tertiary">0.50</td>
-<td class="px-4 py-2 font-data-tabular text-error">-28.4</td>
-<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (ATM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-secondary font-label-caps hover:underline">TRADE</button></td>
-</tr>
-<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height">
-<td class="px-4 py-2 font-data-tabular font-bold">3000</td>
-<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
-<td class="px-4 py-2 font-data-tabular">21.15</td>
-<td class="px-4 py-2 font-data-tabular text-on-surface-variant">52,300</td>
-<td class="px-4 py-2 font-data-tabular">31.5</td>
-<td class="px-4 py-2 font-data-tabular">28.9</td>
-<td class="px-4 py-2 font-data-tabular text-tertiary">0.24</td>
-<td class="px-4 py-2 font-data-tabular text-error">-45.2</td>
-<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
-</tr>
-<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height">
-<td class="px-4 py-2 font-data-tabular font-bold">3050</td>
-<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
-<td class="px-4 py-2 font-data-tabular">12.10</td>
-<td class="px-4 py-2 font-data-tabular text-on-surface-variant">18,900</td>
-<td class="px-4 py-2 font-data-tabular">12.4</td>
-<td class="px-4 py-2 font-data-tabular">34.2</td>
-<td class="px-4 py-2 font-data-tabular text-tertiary">0.12</td>
-<td class="px-4 py-2 font-data-tabular text-error">-58.1</td>
-<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
-</tr>
-<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height opacity-50">
-<td class="px-4 py-2 font-data-tabular font-bold">3100</td>
-<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
-<td class="px-4 py-2 font-data-tabular">5.40</td>
-<td class="px-4 py-2 font-data-tabular text-on-surface-variant">4,200</td>
-<td class="px-4 py-2 font-data-tabular">5.8</td>
-<td class="px-4 py-2 font-data-tabular">41.0</td>
-<td class="px-4 py-2 font-data-tabular text-tertiary">0.05</td>
-<td class="px-4 py-2 font-data-tabular text-error">-72.4</td>
-<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
-</tr>
-<tr class="row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height opacity-40">
-<td class="px-4 py-2 font-data-tabular font-bold">3150</td>
-<td class="px-4 py-2 text-error font-label-caps">CE (OTM)</td>
-<td class="px-4 py-2 font-data-tabular">2.10</td>
-<td class="px-4 py-2 font-data-tabular text-on-surface-variant">1,100</td>
-<td class="px-4 py-2 font-data-tabular">2.2</td>
-<td class="px-4 py-2 font-data-tabular">45.5</td>
-<td class="px-4 py-2 font-data-tabular text-tertiary">0.02</td>
-<td class="px-4 py-2 font-data-tabular text-error">-89.1</td>
-<td class="px-4 py-2"><button onclick="showToast('Order Placed CE (OTM) Strike ' + this.closest('tr').cells[0].textContent + ' Successfully!')" class="text-on-surface-variant font-label-caps hover:underline">TRADE</button></td>
-</tr>
-</tbody>
+<tbody id="options-chain-tbody" class="divide-y divide-outline-variant"></tbody>
 </table>
 </div>
 <div class="p-2 bg-surface-container-lowest/40 border-t border-outline-variant flex justify-between items-center text-[10px] text-outline font-label-caps backdrop-blur-md">
@@ -700,5 +633,74 @@
             toast.classList.add('translate-y-10', 'opacity-0');
         }, 3000);
     }
+    
+    // Option Chain Database
+    const optionChainData = {
+        'CALLS': [
+            { strike: 2900, type: 'CE (ITM)', ltp: 78.20, volume: '12,450', oi: '15.2', iv: '24.5', delta: '0.82', theta: '-12.5', class: 'text-tertiary', trClass: 'bg-tertiary-container/5' },
+            { strike: 2950, type: 'CE (ATM)', ltp: 42.50, volume: '84,120', oi: '42.8', iv: '22.1', delta: '0.50', theta: '-28.4', class: 'text-secondary', trClass: 'border-l-2 border-secondary-container bg-secondary-container/5' },
+            { strike: 3000, type: 'CE (OTM)', ltp: 21.15, volume: '52,300', oi: '31.5', iv: '28.9', delta: '0.24', theta: '-45.2', class: 'text-error', trClass: '' },
+            { strike: 3050, type: 'CE (OTM)', ltp: 12.10, volume: '18,900', oi: '12.4', iv: '34.2', delta: '0.12', theta: '-58.1', class: 'text-error', trClass: '' },
+            { strike: 3100, type: 'CE (OTM)', ltp: 5.40, volume: '4,200', oi: '5.8', iv: '41.0', delta: '0.05', theta: '-72.4', class: 'text-error opacity-50', trClass: '' },
+            { strike: 3150, type: 'CE (OTM)', ltp: 2.10, volume: '1,100', oi: '2.2', iv: '45.5', delta: '0.02', theta: '-89.1', class: 'text-error opacity-40', trClass: '' }
+        ],
+        'PUTS': [
+            { strike: 2900, type: 'PE (OTM)', ltp: 12.10, volume: '14,250', oi: '8.4', iv: '26.5', delta: '-0.15', theta: '-18.2', class: 'text-error opacity-50', trClass: '' },
+            { strike: 2950, type: 'PE (ATM)', ltp: 48.30, volume: '72,180', oi: '38.6', iv: '21.8', delta: '-0.52', theta: '-26.1', class: 'text-secondary', trClass: 'border-l-2 border-secondary-container bg-secondary-container/5' },
+            { strike: 3000, type: 'PE (ITM)', ltp: 82.50, volume: '8,420', oi: '14.1', iv: '23.4', delta: '-0.81', theta: '-12.4', class: 'text-tertiary', trClass: 'bg-tertiary-container/5' },
+            { strike: 3050, type: 'PE (ITM)', ltp: 124.00, volume: '2,100', oi: '4.8', iv: '25.1', delta: '-0.92', theta: '-6.5', class: 'text-tertiary', trClass: '' },
+            { strike: 3100, type: 'PE (ITM)', ltp: 172.40, volume: '850', oi: '2.1', iv: '28.0', delta: '-0.97', theta: '-2.3', class: 'text-tertiary', trClass: '' },
+            { strike: 3150, type: 'PE (ITM)', ltp: 221.10, volume: '120', oi: '0.5', iv: '31.2', delta: '-0.99', theta: '-0.8', class: 'text-tertiary', trClass: '' }
+        ]
+    };
+
+    let activeOptionType = 'CALLS';
+
+    function renderOptionsChain(type) {
+        const tbody = document.getElementById('options-chain-tbody');
+        if(!tbody) return;
+        
+        tbody.innerHTML = '';
+        const rows = optionChainData[type];
+        
+        rows.forEach(r => {
+            const tr = document.createElement('tr');
+            tr.className = `row-hover-transition hover:bg-white/10 cursor-pointer h-table-row-height ${r.trClass}`;
+            tr.innerHTML = `
+                <td class="px-4 py-2 font-data-tabular font-bold">${r.strike}</td>
+                <td class="px-4 py-2 ${r.class.split(' ')[0]} font-label-caps">${r.type}</td>
+                <td class="px-4 py-2 font-data-tabular">${r.ltp.toFixed(2)}</td>
+                <td class="px-4 py-2 font-data-tabular text-on-surface-variant">${r.volume}</td>
+                <td class="px-4 py-2 font-data-tabular">${r.oi}</td>
+                <td class="px-4 py-2 font-data-tabular">${r.iv}</td>
+                <td class="px-4 py-2 font-data-tabular ${type === 'CALLS' ? 'text-tertiary' : 'text-error'}">${r.delta}</td>
+                <td class="px-4 py-2 font-data-tabular text-error">${r.theta}</td>
+                <td class="px-4 py-2">
+                    <button onclick="showToast('Order Placed ${r.type.split(' ')[0]} Strike ' + ${r.strike} + ' Successfully!')" class="${type === 'CALLS' ? 'text-tertiary' : 'text-error'} font-label-caps hover:underline">TRADE</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function switchOptionType(type) {
+        activeOptionType = type;
+        const btnCalls = document.getElementById('btn-calls');
+        const btnPuts = document.getElementById('btn-puts');
+        
+        if (type === 'CALLS') {
+            btnCalls.className = 'px-3 py-1 font-label-caps text-tertiary bg-surface-variant/40 rounded transition-all';
+            btnPuts.className = 'px-3 py-1 font-label-caps text-on-surface-variant hover:text-on-surface rounded transition-all';
+        } else {
+            btnPuts.className = 'px-3 py-1 font-label-caps text-error bg-surface-variant/40 rounded transition-all';
+            btnCalls.className = 'px-3 py-1 font-label-caps text-on-surface-variant hover:text-on-surface rounded transition-all';
+        }
+        renderOptionsChain(activeOptionType);
+    }
+
+    // Initialize option chain on load
+    window.addEventListener('DOMContentLoaded', () => {
+        renderOptionsChain(activeOptionType);
+    });
     </script>
 </body></html>
