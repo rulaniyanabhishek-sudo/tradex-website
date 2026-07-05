@@ -1,3 +1,72 @@
+// 3D Visual Credit Splash Screen (Global Page Entry)
+(function() {
+    // Inject Custom Keyframe Animations
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes spin-slow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.05); } }
+        @keyframes scale-up { 0% { transform: scale(0.92); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes progress-grow { 0% { width: 0%; } 100% { width: 100%; } }
+    `;
+    document.head.appendChild(style);
+
+    // Inject Splash Screen Overlay
+    const splash = document.createElement('div');
+    splash.id = 'intro-splash-global';
+    splash.style.cssText = "position: fixed; inset: 0; z-index: 9999999; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #05070a; overflow: hidden; font-family: 'Inter', sans-serif; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);";
+    splash.innerHTML = `
+        <!-- Giant glowing nebula backdrop -->
+        <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(102, 253, 172, 0.12) 0%, transparent 60%); animation: pulse-glow 4s ease-in-out infinite;"></div>
+        
+        <!-- 3D Crystalline Spinning Elements -->
+        <div style="position: relative; width: 200px; height: 200px; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; animation: scale-up 1s ease-out;">
+            <!-- Outer Orb Orbit -->
+            <div style="position: absolute; width: 180px; height: 180px; border: 2px solid rgba(102, 253, 172, 0.25); border-radius: 50%; animation: spin-slow 8s linear infinite; box-shadow: 0 0 40px rgba(102, 253, 172, 0.15);"></div>
+            <!-- Inner Orbit -->
+            <div style="position: absolute; width: 140px; height: 140px; border: 1px dashed rgba(173, 198, 255, 0.4); border-radius: 50%; animation: spin-reverse 12s linear infinite;"></div>
+            <!-- Central Crystalline Core -->
+            <div style="width: 70px; height: 70px; background: linear-gradient(135deg, #66fdac 0%, #adc6ff 100%); transform: rotate(45deg); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 50px rgba(102, 253, 172, 0.6); border: 2px solid rgba(255, 255, 255, 0.2);">
+                <span class="material-symbols-outlined" style="font-size: 32px; color: #05070a; transform: rotate(-45deg); font-weight: 900; animation: pulse-glow 2s infinite;">auto_awesome</span>
+            </div>
+        </div>
+        
+        <!-- Typography -->
+        <div style="text-align: center; z-index: 10; animation: scale-up 1.2s ease-out;">
+            <h2 style="font-size: 10px; letter-spacing: 0.35em; color: #adc6ff; font-weight: 700; margin-bottom: 8px; text-transform: uppercase;">INITIALIZING TRADEX SYSTEM</h2>
+            <h1 style="font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 0.05em; line-height: 1.3;">
+                MADE BY <span style="background: linear-gradient(to right, #66fdac, #adc6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(102,253,172,0.4)); font-weight: 900;">ABHISHEK RULANIYA</span>
+            </h1>
+            <p style="font-size: 11px; letter-spacing: 0.2em; color: #8f9194; margin-top: 6px; font-weight: 600;">IN 3D &amp; BEST VISUALS POSSIBLE</p>
+        </div>
+        
+        <!-- Progress loader -->
+        <div style="position: relative; width: 180px; height: 3px; background-color: rgba(255, 255, 255, 0.05); border-radius: 9px; margin-top: 32px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.05);">
+            <div style="height: 100%; background: linear-gradient(90deg, #adc6ff, #66fdac, #adc6ff); border-radius: 9px; animation: progress-grow 3.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;"></div>
+        </div>
+    `;
+    
+    // Inject safely when document body exists
+    if (document.body) {
+        document.body.appendChild(splash);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.appendChild(splash);
+        });
+    }
+
+    // Fade out timeout
+    setTimeout(() => {
+        const splashEl = document.getElementById('intro-splash-global');
+        if (splashEl) {
+            splashEl.style.opacity = '0';
+            splashEl.style.transform = 'scale(1.05)';
+            splashEl.style.pointerEvents = 'none';
+            setTimeout(() => splashEl.remove(), 800);
+        }
+    }, 3800); // 3.8 seconds
+})();
+
 // Reusable Sidebar Modals Controller
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Inject Modals HTML into body
