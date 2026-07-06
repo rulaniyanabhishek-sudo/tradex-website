@@ -1271,7 +1271,7 @@ void main() {
                     <span class="font-bold text-xs ${isActive ? 'text-secondary drop-shadow-[0_0_8px_rgba(173,198,255,0.5)]' : 'group-hover:text-secondary'}">${sym}</span>
                     <span class="text-[9px] ${isActive ? 'text-secondary/60' : 'text-outline'}">NSE</span>
                 </div>
-                <div class="text-right font-data-tabular self-center text-on-surface font-medium">${stock.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                <div id="sidebar-price-${sym.replace(' ', '-')}" class="text-right font-data-tabular self-center text-on-surface font-medium">${stock.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                 <div class="text-right font-data-tabular ${isBullish ? 'text-tertiary font-bold drop-shadow-[0_0_4px_rgba(102,253,172,0.3)]' : 'text-error'} self-center">${isBullish ? '+' : ''}${diff}%</div>
             `;
             container.appendChild(div);
@@ -1497,7 +1497,17 @@ void main() {
             if (lastCandle.close > lastCandle.high) lastCandle.high = lastCandle.close;
             if (lastCandle.close < lastCandle.low) lastCandle.low = lastCandle.close;
             
-            document.getElementById('stock-price-main').textContent = `₹${lastCandle.close.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            // Sync the stock database price with the live tick
+            stock.price = lastCandle.close;
+            
+            const formattedPrice = lastCandle.close.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('stock-price-main').textContent = `₹${formattedPrice}`;
+            
+            // Sync the sidebar price
+            const sidebarPriceEl = document.getElementById(`sidebar-price-${activeSymbol.replace(' ', '-')}`);
+            if (sidebarPriceEl) {
+                sidebarPriceEl.textContent = formattedPrice;
+            }
             
             renderChart(activeSymbol);
         }
