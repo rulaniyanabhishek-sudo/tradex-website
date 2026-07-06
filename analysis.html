@@ -1141,24 +1141,41 @@ void main() {
     function updateStockDOM(symbol) {
         const stock = getOrCreateStock(symbol);
         
+        // Override with LIVE prices if available
+        const liveData = window._tradexLivePrices ? window._tradexLivePrices[symbol] : null;
+        if (liveData) {
+            stock.price = liveData.price;
+            stock.high = liveData.dayHigh;
+            stock.low = liveData.dayLow;
+            stock.volume = liveData.volume >= 1e7 ? (liveData.volume / 1e7).toFixed(2) + 'Cr' : liveData.volume >= 1e5 ? (liveData.volume / 1e5).toFixed(2) + 'L' : liveData.volume >= 1e3 ? (liveData.volume / 1e3).toFixed(1) + 'K' : liveData.volume.toString();
+        }
+        
         document.getElementById('stock-name').textContent = stock.name;
         document.getElementById('stock-exchange-symbol').textContent = stock.exchangeSymbol;
-        document.getElementById('stock-price-main').textContent = `₹${stock.price.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        document.getElementById('stock-price-main').textContent = `₹${stock.price.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
         
         const priceChangeEl = document.getElementById('stock-price-change');
-        const isPositive = stock.price > stock.high * 0.97;
-        const diff = Math.abs(stock.price * 0.015).toFixed(2);
-        const percent = (isPositive ? 1.45 : -0.85).toFixed(2);
+        let isPositive, diff, percent;
+        if (liveData) {
+            diff = (liveData.price - liveData.previousClose).toFixed(2);
+            percent = ((parseFloat(diff) / liveData.previousClose) * 100).toFixed(2);
+            isPositive = parseFloat(diff) >= 0;
+        } else {
+            isPositive = stock.price > stock.high * 0.97;
+            diff = Math.abs(stock.price * 0.015).toFixed(2);
+            percent = (isPositive ? 1.45 : -0.85).toFixed(2);
+        }
         
-        priceChangeEl.textContent = `${isPositive ? '+' : '-'}${diff} (${isPositive ? '+' : ''}${percent}%)`;
+        const sign = isPositive ? '+' : '';
+        priceChangeEl.textContent = `${sign}${diff} (${sign}${percent}%)`;
         if (isPositive) {
             priceChangeEl.className = 'text-tertiary font-data-tabular font-bold text-lg drop-shadow-[0_0_8px_rgba(102,253,172,0.4)]';
         } else {
             priceChangeEl.className = 'text-error font-data-tabular font-bold text-lg drop-shadow-[0_0_8px_rgba(255,180,171,0.4)]';
         }
 
-        document.getElementById('stock-high').textContent = stock.high.toLocaleString('en-US', {minimumFractionDigits: 2});
-        document.getElementById('stock-low').textContent = stock.low.toLocaleString('en-US', {minimumFractionDigits: 2});
+        document.getElementById('stock-high').textContent = stock.high.toLocaleString('en-IN', {minimumFractionDigits: 2});
+        document.getElementById('stock-low').textContent = stock.low.toLocaleString('en-IN', {minimumFractionDigits: 2});
         document.getElementById('stock-volume').textContent = stock.volume;
         document.getElementById('stock-avg-volume').textContent = stock.avgVol;
 
@@ -1210,8 +1227,20 @@ void main() {
         
         symbols.forEach(sym => {
             const stock = getOrCreateStock(sym);
-            const isBullish = stock.price > stock.high * 0.97;
-            const diff = (isBullish ? 1.45 : -0.85).toFixed(2);
+            const liveData = window._tradexLivePrices ? window._tradexLivePrices[sym] : null;
+            
+            let displayPrice, isBullish, diff;
+            if (liveData) {
+                displayPrice = liveData.price;
+                stock.price = liveData.price;
+                const change = liveData.price - liveData.previousClose;
+                isBullish = change >= 0;
+                diff = ((change / liveData.previousClose) * 100).toFixed(2);
+            } else {
+                displayPrice = stock.price;
+                isBullish = stock.price > stock.high * 0.97;
+                diff = (isBullish ? 1.45 : -0.85).toFixed(2);
+            }
             const isActive = sym === activeSymbol;
             
             const div = document.createElement('div');
@@ -1223,7 +1252,7 @@ void main() {
                     <span class="font-bold text-xs ${isActive ? 'text-secondary drop-shadow-[0_0_8px_rgba(173,198,255,0.5)]' : 'group-hover:text-secondary'}">${sym}</span>
                     <span class="text-[9px] ${isActive ? 'text-secondary/60' : 'text-outline'}">NSE</span>
                 </div>
-                <div id="sidebar-price-${sym.replace(' ', '-')}" class="text-right font-data-tabular self-center text-on-surface font-medium">${stock.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                <div id="sidebar-price-${sym.replace(' ', '-')}" class="text-right font-data-tabular self-center text-on-surface font-medium">${displayPrice.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                 <div class="text-right font-data-tabular ${isBullish ? 'text-tertiary font-bold drop-shadow-[0_0_4px_rgba(102,253,172,0.3)]' : 'text-error'} self-center">${isBullish ? '+' : ''}${diff}%</div>
             `;
             container.appendChild(div);
@@ -1431,39 +1460,21 @@ void main() {
     });
 
     // Simulating Live Market Tickers and Candle updates
+    // NOTE: Ticker and stock prices are now handled by live_prices.js (real Yahoo Finance data)
+    // This interval only updates the candlestick chart animation
     setInterval(() => {
-        const ticker = document.querySelector('.font-label-caps.text-label-caps.text-on-surface');
-        if (ticker) {
-            const nifty = (24423.95 + (Math.random() * 10 - 5)).toFixed(2);
-            const change = (0.63 + (Math.random() * 0.1 - 0.05)).toFixed(2);
-            ticker.textContent = `NIFTY: ${nifty} (+${change}%) | SENSEX: 78,255.38 (+0.63%) | VIX: 11.85 (+0.42%)`;
-        }
-
-        // Simulating live ticking of the last candle close value
         const stock = getOrCreateStock(activeSymbol);
         const candles = generateCandles(activeSymbol, stock.price, activeTimeframe);
         if (candles && candles.length > 0) {
             const lastCandle = candles[candles.length - 1];
-            const tick = (Math.random() * 4 - 2);
+            const tick = (Math.random() * 2 - 1);
             lastCandle.close += tick;
             if (lastCandle.close > lastCandle.high) lastCandle.high = lastCandle.close;
             if (lastCandle.close < lastCandle.low) lastCandle.low = lastCandle.close;
-            
-            // Sync the stock database price with the live tick
-            stock.price = lastCandle.close;
-            
-            const formattedPrice = lastCandle.close.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('stock-price-main').textContent = `₹${formattedPrice}`;
-            
-            // Sync the sidebar price
-            const sidebarPriceEl = document.getElementById(`sidebar-price-${activeSymbol.replace(' ', '-')}`);
-            if (sidebarPriceEl) {
-                sidebarPriceEl.textContent = formattedPrice;
-            }
-            
             renderChart(activeSymbol);
         }
     }, 2000);
 </script>
 <script src="sidebar_modals.js"></script>
+<script src="live_prices.js"></script>
 </body></html>
