@@ -257,7 +257,7 @@ setTimeout(function() {
 <div class="flex items-center gap-3">
 <button onclick="toggleMobileSidebar()" class="md:hidden text-on-surface-variant hover:text-white mr-2 active:scale-95 transition-transform"><span class="material-symbols-outlined">menu</span></button>
 <span class="material-symbols-outlined text-tertiary text-sm market-pulse drop-shadow-[0_0_5px_rgba(102,253,172,0.8)]">sensors</span>
-<span class="font-data-tabular text-[10px] md:text-[12px] text-tertiary tracking-wider whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] md:max-w-none">NIFTY: 22,450.20 (+1.2%) | SENSEX: 74,120.45 (+0.8%) | VIX: 12.4 (-2.1%)</span>
+<span class="font-data-tabular text-[10px] md:text-[12px] text-tertiary tracking-wider whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] md:max-w-none">NIFTY: 24,423.95 (+0.63%) | SENSEX: 78,255.38 (+0.63%) | VIX: 11.85 (+0.42%)</span>
 </div>
 <div class="flex items-center gap-6">
 <span class="font-label-caps text-[9px] text-tertiary border border-tertiary/30 px-2 py-1 rounded bg-tertiary/10 hidden md:inline-block">LIVE DATA STREAM</span>
@@ -690,8 +690,8 @@ setTimeout(function() {
         // Simulating Live Ticker Updates
         const ticker = document.querySelector('.font-data-tabular');
         setInterval(() => {
-            const nifty = (22450.20 + (Math.random() * 10 - 5)).toFixed(2);
-            const change = (1.2 + (Math.random() * 0.1 - 0.05)).toFixed(2);
+            const nifty = (24423.95 + (Math.random() * 10 - 5)).toFixed(2);
+            const change = (0.63 + (Math.random() * 0.1 - 0.05)).toFixed(2);
             if(ticker) ticker.innerHTML = `NIFTY: ${nifty} (+${change}%) <span class="text-on-surface-variant mx-2">|</span> SENSEX: 74,120.45 (+0.8%) <span class="text-on-surface-variant mx-2">|</span> VIX: 12.4 (-2.1%)`;
         }, 3000);
 

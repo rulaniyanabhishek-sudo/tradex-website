@@ -317,7 +317,7 @@ setTimeout(function() {
 <header class="flex items-center justify-between px-4 py-1 h-8 bg-surface-container-lowest/60 backdrop-blur-xl border-b border-outline-variant relative z-10">
 <div class="flex items-center gap-2">
 <span class="material-symbols-outlined text-tertiary text-[14px] pulse-dot">sensors</span>
-<span class="font-label-caps text-label-caps text-on-surface">NIFTY: 22,450.20 (+1.2%) | SENSEX: 74,120.45 (+0.8%) | VIX: 12.4 (-2.1%)</span>
+<span class="font-label-caps text-label-caps text-on-surface">NIFTY: 24,423.95 (+0.63%) | SENSEX: 78,255.38 (+0.63%) | VIX: 11.85 (+0.42%)</span>
 </div>
 <div class="flex items-center gap-4">
 <span class="font-data-tabular text-data-tabular text-on-surface">EST. VOL: 14.2B</span>
@@ -857,73 +857,17 @@ void main() {
         'FAVS': ['RELIANCE', 'TCS', 'HDFC BANK', 'SBIN']
     };
 
-    const stockDatabase = {
-        'RELIANCE': { name: 'RELIANCE INDUSTRIES', exchangeSymbol: 'NSE: RELIANCE', price: 2945.10, high: 2968.00, low: 2901.45, volume: '4.82M', avgVol: '3.15M', confluence: 8.4, confluenceText: 'HIGH SYNC', confluenceOffset: '16', patternName: 'Bullish Engulfing', patternZone: 'Value Area High', volumeConfirmText: 'Strong Anomaly', volumeConfirmWidth: '85%', indicators: { vwap: '2,938.90', ema20: '2,932.40', ema50: '2,910.15' }, targetPrice: '3,045', entryPrice: '2,952', invalidationPrice: '2,924', targetTop: '20%', entryTop: '50%', invalBottom: '15%' },
-        'HDFC BANK': { name: 'HDFC BANK LIMITED', exchangeSymbol: 'NSE: HDFCBANK', price: 1422.35, high: 1438.00, low: 1415.20, volume: '8.45M', avgVol: '6.78M', confluence: 7.2, confluenceText: 'STABLE TREND', confluenceOffset: '28', patternName: 'Bullish Pennant', patternZone: 'EMA 20 Support', volumeConfirmText: 'Confirming Vol', volumeConfirmWidth: '72%', indicators: { vwap: '1,424.10', ema20: '1,421.50', ema50: '1,412.30' }, targetPrice: '1,540', entryPrice: '1,452', invalidationPrice: '1,438', targetTop: '25%', entryTop: '60%', invalBottom: '20%' },
-        'TCS': { name: 'TATA CONSULTANCY SERVICES', exchangeSymbol: 'NSE: TCS', price: 3988.40, high: 4020.00, low: 3950.00, volume: '2.12M', avgVol: '1.95M', confluence: 6.1, confluenceText: 'MEAN REVERSION', confluenceOffset: '39', patternName: 'Mean Reversion', patternZone: 'Overbought Limit', volumeConfirmText: 'Declining Vol', volumeConfirmWidth: '40%', indicators: { vwap: '3,995.20', ema20: '4,010.50', ema50: '3,975.00' }, targetPrice: '3,850', entryPrice: '4,120', invalidationPrice: '4,195', targetTop: '75%', entryTop: '35%', invalBottom: '65%' },
-        'INFY': { name: 'INFOSYS LIMITED', exchangeSymbol: 'NSE: INFY', price: 496.93, high: 504.00, low: 489.50, volume: '6.12M', avgVol: '5.20M', confluence: 6.8, confluenceText: 'STABLE TREND', confluenceOffset: '32', patternName: 'Double Bottom', patternZone: 'EMA 50 Support', volumeConfirmText: 'Accumulation Flow', volumeConfirmWidth: '60%', indicators: { vwap: '494.50', ema20: '495.10', ema50: '488.20' }, targetPrice: '525', entryPrice: '502', invalidationPrice: '492', targetTop: '30%', entryTop: '62%', invalBottom: '25%' },
-        'ICICI BANK': { name: 'ICICI BANK LIMITED', exchangeSymbol: 'NSE: ICICIBANK', price: 2136.01, high: 2154.00, low: 2110.50, volume: '4.15M', avgVol: '3.90M', confluence: 7.9, confluenceText: 'STABLE TREND', confluenceOffset: '21', patternName: 'Ascending Triangle', patternZone: 'Value Area Low', volumeConfirmText: 'Strong Volume', volumeConfirmWidth: '78%', indicators: { vwap: '2,128.40', ema20: '2,125.00', ema50: '2,108.10' }, targetPrice: '2,240', entryPrice: '2,150', invalidationPrice: '2,118', targetTop: '25%', entryTop: '55%', invalBottom: '20%' },
-        'SBIN': { name: 'STATE BANK OF INDIA', exchangeSymbol: 'NSE: SBIN', price: 2396.75, high: 2420.00, low: 2375.00, volume: '9.10M', avgVol: '8.40M', confluence: 8.1, confluenceText: 'HIGH SYNC', confluenceOffset: '19', patternName: 'Flag Breakout', patternZone: 'Value Area High', volumeConfirmText: 'Strong Anomaly', volumeConfirmWidth: '82%', indicators: { vwap: '2,392.10', ema20: '2,388.40', ema50: '2,360.50' }, targetPrice: '2,510', entryPrice: '2,408', invalidationPrice: '2,380', targetTop: '20%', entryTop: '52%', invalBottom: '16%' },
-        'L&T': { name: 'LARSEN & TOUBRO LIMITED', exchangeSymbol: 'NSE: LT', price: 1265.48, high: 1282.00, low: 1248.00, volume: '1.92M', avgVol: '1.75M', confluence: 6.9, confluenceText: 'STABLE TREND', confluenceOffset: '31', patternName: 'Bullish Engulfing', patternZone: 'Support Level', volumeConfirmText: 'Confirming Flow', volumeConfirmWidth: '65%', indicators: { vwap: '1,262.10', ema20: '1,258.40', ema50: '1,245.00' }, targetPrice: '1,340', entryPrice: '1,275', invalidationPrice: '1,254', targetTop: '28%', entryTop: '58%', invalBottom: '22%' },
-        'BHARTI AIRTEL': { name: 'BHARTI AIRTEL LIMITED', exchangeSymbol: 'NSE: BHARTIARTL', price: 336.55, high: 342.00, low: 331.20, volume: '3.42M', avgVol: '3.10M', confluence: 7.4, confluenceText: 'STABLE TREND', confluenceOffset: '26', patternName: 'Channel Breakout', patternZone: 'EMA 20 Support', volumeConfirmText: 'Neutral Flow', volumeConfirmWidth: '55%', indicators: { vwap: '335.80', ema20: '334.20', ema50: '329.10' }, targetPrice: '365', entryPrice: '342', invalidationPrice: '332', targetTop: '25%', entryTop: '60%', invalBottom: '20%' },
-        'ITC': { name: 'ITC LIMITED', exchangeSymbol: 'NSE: ITC', price: 422.10, high: 426.00, low: 418.50, volume: '12.4M', avgVol: '10.8M', confluence: 5.8, confluenceText: 'MEAN REVERSION', confluenceOffset: '42', patternName: 'Inside Bar', patternZone: 'Range Midpoint', volumeConfirmText: 'Neutral Flow', volumeConfirmWidth: '48%', indicators: { vwap: '421.90', ema20: '422.50', ema50: '420.10' }, targetPrice: '445', entryPrice: '428', invalidationPrice: '419', targetTop: '45%', entryTop: '68%', invalBottom: '30%' },
-        'KOTAK BANK': { name: 'KOTAK MAHINDRA BANK', exchangeSymbol: 'NSE: KOTAKBANK', price: 1785.40, high: 1805.00, low: 1770.00, volume: '2.15M', avgVol: '1.90M', confluence: 7.1, confluenceText: 'STABLE TREND', confluenceOffset: '29', patternName: 'Bullish Harami', patternZone: 'VWAP Support', volumeConfirmText: 'Confirming Flow', volumeConfirmWidth: '70%', indicators: { vwap: '1,782.50', ema20: '1,780.10', ema50: '1,768.40' }, targetPrice: '1,890', entryPrice: '1,798', invalidationPrice: '1,778', targetTop: '25%', entryTop: '58%', invalBottom: '22%' },
-        'AXIS BANK': { name: 'AXIS BANK LIMITED', exchangeSymbol: 'NSE: AXISBANK', price: 1045.20, high: 1060.00, low: 1032.00, volume: '4.80M', avgVol: '4.20M', confluence: 5.5, confluenceText: 'MEAN REVERSION', confluenceOffset: '45', patternName: 'Double Top', patternZone: 'Resistance Limit', volumeConfirmText: 'Declining Flow', volumeConfirmWidth: '35%', indicators: { vwap: '1,048.90', ema20: '1,050.40', ema50: '1,038.20' }, targetPrice: '1,010', entryPrice: '1,065', invalidationPrice: '1,082', targetTop: '70%', entryTop: '40%', invalBottom: '60%' },
-        'TATA MOTORS': { name: 'TATA MOTORS LIMITED', exchangeSymbol: 'NSE: TATAMOTORS', price: 924.50, high: 948.00, low: 908.00, volume: '8.42M', avgVol: '6.90M', confluence: 8.6, confluenceText: 'HIGH SYNC', confluenceOffset: '14', patternName: 'Bullish Breakout', patternZone: 'Value Area High', volumeConfirmText: 'Strong Volume', volumeConfirmWidth: '90%', indicators: { vwap: '921.40', ema20: '912.80', ema50: '890.40' }, targetPrice: '995', entryPrice: '935', invalidationPrice: '912', targetTop: '18%', entryTop: '48%', invalBottom: '12%' },
-        'HUL': { name: 'HINDUSTAN UNILEVER LTD', exchangeSymbol: 'NSE: HINDUNILVR', price: 2410.15, high: 2435.00, low: 2390.00, volume: '1.20M', avgVol: '1.15M', confluence: 6.2, confluenceText: 'MEAN REVERSION', confluenceOffset: '38', patternName: 'Hammer Bottom', patternZone: 'Support Target', volumeConfirmText: 'Neutral Flow', volumeConfirmWidth: '50%', indicators: { vwap: '2,408.40', ema20: '2,415.20', ema50: '2,402.10' }, targetPrice: '2,520', entryPrice: '2,425', invalidationPrice: '2,398', targetTop: '35%', entryTop: '65%', invalBottom: '25%' },
-        'BAJAJ FINANCE': { name: 'BAJAJ FINANCE LIMITED', exchangeSymbol: 'NSE: BAJFINANCE', price: 6850.00, high: 6940.00, low: 6780.00, volume: '1.12M', avgVol: '0.98M', confluence: 7.5, confluenceText: 'STABLE TREND', confluenceOffset: '25', patternName: 'Flag Consolidation', patternZone: 'EMA 20 Support', volumeConfirmText: 'Strong Flow', volumeConfirmWidth: '75%', indicators: { vwap: '6,838.00', ema20: '6,821.50', ema50: '6,742.00' }, targetPrice: '7,400', entryPrice: '6,920', invalidationPrice: '6,800', targetTop: '25%', entryTop: '60%', invalBottom: '20%' },
-        'MARUTI': { name: 'MARUTI SUZUKI INDIA LTD', exchangeSymbol: 'NSE: MARUTI', price: 11420.00, high: 11580.00, low: 11310.00, volume: '0.85M', avgVol: '0.72M', confluence: 8.2, confluenceText: 'HIGH SYNC', confluenceOffset: '18', patternName: 'Channel Breakout', patternZone: 'Value Area High', volumeConfirmText: 'Strong Volume', volumeConfirmWidth: '80%', indicators: { vwap: '11,402.00', ema20: '11,380.00', ema50: '11,180.00' }, targetPrice: '12,100', entryPrice: '11,480', invalidationPrice: '11,320', targetTop: '20%', entryTop: '50%', invalBottom: '15%' },
-        'SUN PHARMA': { name: 'SUN PHARMACEUTICAL IND', exchangeSymbol: 'NSE: SUNPHARMA', price: 1540.30, high: 1562.00, low: 1521.00, volume: '1.45M', avgVol: '1.30M', confluence: 7.0, confluenceText: 'STABLE TREND', confluenceOffset: '30', patternName: 'Ascending Triangle', patternZone: 'VWAP Level', volumeConfirmText: 'Confirming Flow', volumeConfirmWidth: '68%', indicators: { vwap: '1,538.50', ema20: '1,535.20', ema50: '1,510.40' }, targetPrice: '1,650', entryPrice: '1,555', invalidationPrice: '1,524', targetTop: '25%', entryTop: '58%', invalBottom: '22%' },
-        'TITAN': { name: 'TITAN COMPANY LIMITED', exchangeSymbol: 'NSE: TITAN', price: 3620.00, high: 3665.00, low: 3585.00, volume: '1.10M', avgVol: '0.95M', confluence: 6.5, confluenceText: 'STABLE TREND', confluenceOffset: '35', patternName: 'Bullish Pennant', patternZone: 'EMA 20 Support', volumeConfirmText: 'Neutral Flow', volumeConfirmWidth: '58%', indicators: { vwap: '3,612.40', ema20: '3,610.00', ema50: '3,565.40' }, targetPrice: '3,880', entryPrice: '3,655', invalidationPrice: '3,595', targetTop: '28%', entryTop: '62%', invalBottom: '24%' },
-        'TATA STEEL': { name: 'TATA STEEL LIMITED', exchangeSymbol: 'NSE: TATASTEEL', price: 152.40, high: 155.20, low: 149.80, volume: '24.1M', avgVol: '21.5M', confluence: 7.8, confluenceText: 'STABLE TREND', confluenceOffset: '22', patternName: 'Double Bottom', patternZone: 'Value Area Low', volumeConfirmText: 'Strong Volume', volumeConfirmWidth: '76%', indicators: { vwap: '151.90', ema20: '151.10', ema50: '147.60' }, targetPrice: '168', entryPrice: '154', invalidationPrice: '150', targetTop: '22%', entryTop: '55%', invalBottom: '18%' },
-        'M&M': { name: 'MAHINDRA & MAHINDRA LTD', exchangeSymbol: 'NSE: M&M', price: 2045.60, high: 2075.00, low: 2021.00, volume: '2.40M', avgVol: '2.10M', confluence: 8.3, confluenceText: 'HIGH SYNC', confluenceOffset: '17', patternName: 'Flag Breakout', patternZone: 'Value Area High', volumeConfirmText: 'Strong Anomaly', volumeConfirmWidth: '84%', indicators: { vwap: '2,042.10', ema20: '2,036.00', ema50: '1,992.50' }, targetPrice: '2,180', entryPrice: '2,060', invalidationPrice: '2,030', targetTop: '20%', entryTop: '50%', invalBottom: '15%' },
-        'NTPC': { name: 'NTPC LIMITED', exchangeSymbol: 'NSE: NTPC', price: 342.15, high: 348.00, low: 337.50, volume: '8.90M', avgVol: '7.80M', confluence: 7.3, confluenceText: 'STABLE TREND', confluenceOffset: '27', patternName: 'Inside Bar Breakout', patternZone: 'Support Level', volumeConfirmText: 'Neutral Flow', volumeConfirmWidth: '60%', indicators: { vwap: '341.60', ema20: '340.50', ema50: '333.10' }, targetPrice: '375', entryPrice: '346', invalidationPrice: '338', targetTop: '25%', entryTop: '58%', invalBottom: '20%' }
-    };
-    let activeSymbol = 'RELIANCE';
-    let activeMarketTab = 'NIFTY 50';
-    let activeTimeframe = '5m';
-    const candleCache = {};
-
-    // Drag to scroll variables
-    let scrollOffset = 0; // Number of candles scrolled back in time
-    let isDragging = false;
-    let dragStartX = 0;
-    let dragStartOffset = 0;
-    const viewportCount = 35; // Number of candles visible in viewport
-
-    function getOrCreateStock(symbol) {
-        if (stockDatabase[symbol]) return stockDatabase[symbol];
-        
-        const basePrice = 200 + Math.random() * 2800;
-        const isBullish = Math.random() > 0.45;
-        const confluenceVal = (5 + Math.random() * 4.5).toFixed(1);
-        
-        stockDatabase[symbol] = {
-            name: `${symbol} CORP`,
-            exchangeSymbol: `NSE: ${symbol.replace(' ', '_')}`,
-            price: basePrice,
-            high: basePrice * 1.02,
-            low: basePrice * 0.98,
-            volume: (1 + Math.random() * 5).toFixed(2) + 'M',
-            avgVol: (1 + Math.random() * 4).toFixed(2) + 'M',
-            confluence: parseFloat(confluenceVal),
-            confluenceText: confluenceVal >= 8 ? 'HIGH SYNC' : (confluenceVal >= 7 ? 'STABLE TREND' : 'MEAN REVERSION'),
-            confluenceOffset: Math.round((10 - confluenceVal) * 10).toString(),
-            patternName: isBullish ? 'Bullish Breakout' : 'Bearish Breakdown',
-            patternZone: 'Value Area Limit',
-            volumeConfirmText: isBullish ? 'Strong Anomaly' : 'Neutral Flow',
-            volumeConfirmWidth: Math.round(50 + Math.random() * 40) + '%',
-            indicators: {
-                vwap: (basePrice * (1 + (Math.random() * 0.01 - 0.005))).toFixed(2),
-                ema20: (basePrice * (1 + (Math.random() * 0.02 - 0.01))).toFixed(2),
-                ema50: (basePrice * (1 + (Math.random() * 0.03 - 0.015))).toFixed(2)
-            },
-            targetPrice: (basePrice * (isBullish ? 1.08 : 0.92)).toFixed(2),
-            entryPrice: (basePrice * (isBullish ? 1.01 : 0.99)).toFixed(2),
-            invalidationPrice: (basePrice * (isBullish ? 0.98 : 1.02)).toFixed(2),
-            targetTop: isBullish ? '25%' : '75%',
-            entryTop: isBullish ? '55%' : '35%',
-            invalBottom: isBullish ? '18%' : '65%'
+            const stockDatabase = {
+            'RELIANCE': { name: 'RELIANCE INDUSTRIES', exchangeSymbol: 'NSE: RELIANCE', price: 1321.70, high: 1340.00, low: 1300.45, volume: '14.82M', avgVol: '13.15M', confluence: 8.4, confluenceText: 'HIGH SYNC', confluenceOffset: '16', patternName: 'Bullish Engulfing', patternZone: 'Value Area High', volumeConfirmText: 'Strong Anomaly', volumeConfirmWidth: '85%', indicators: { vwap: '1310.90', ema20: '1302.40', ema50: '1280.15' }, targetPrice: '1400', entryPrice: '1330', invalidationPrice: '1290', targetTop: '20%', entryTop: '50%', invalBottom: '15%' },
+            'TCS': { name: 'TATA CONSULTANCY', exchangeSymbol: 'NSE: TCS', price: 3959.00, high: 4020.00, low: 3900.00, volume: '2.1M', avgVol: '2.5M', confluence: 7.2, confluenceText: 'STABLE TREND', confluenceOffset: '28', patternName: 'Flag Breakout', patternZone: 'VWAP', volumeConfirmText: 'Average Flow', volumeConfirmWidth: '60%', indicators: { vwap: '3950.00', ema20: '3920.00', ema50: '3880.00' }, targetPrice: '4100', entryPrice: '3970', invalidationPrice: '3920', targetTop: '15%', entryTop: '45%', invalBottom: '25%' },
+            'HDFC BANK': { name: 'HDFC BANK LTD', exchangeSymbol: 'NSE: HDFCBANK', price: 1628.00, high: 1640.00, low: 1610.00, volume: '12.5M', avgVol: '10.2M', confluence: 9.1, confluenceText: 'HIGH SYNC', confluenceOffset: '9', patternName: 'Double Bottom', patternZone: 'Support', volumeConfirmText: 'Massive Accumulation', volumeConfirmWidth: '95%', indicators: { vwap: '1620.00', ema20: '1605.00', ema50: '1580.00' }, targetPrice: '1680', entryPrice: '1630', invalidationPrice: '1600', targetTop: '10%', entryTop: '40%', invalBottom: '20%' },
+            'INFY': { name: 'INFOSYS LTD', exchangeSymbol: 'NSE: INFY', price: 1496.93, high: 1510.00, low: 1480.00, volume: '5.2M', avgVol: '6.1M', confluence: 6.5, confluenceText: 'MEAN REVERSION', confluenceOffset: '35', patternName: 'RSI Divergence', patternZone: 'Oversold', volumeConfirmText: 'Decreasing Supply', volumeConfirmWidth: '45%', indicators: { vwap: '1500.00', ema20: '1520.00', ema50: '1550.00' }, targetPrice: '1550', entryPrice: '1500', invalidationPrice: '1470', targetTop: '30%', entryTop: '60%', invalBottom: '10%' },
+            'ICICI BANK': { name: 'ICICI BANK LTD', exchangeSymbol: 'NSE: ICICIBANK', price: 1226.50, high: 1240.00, low: 1210.00, volume: '8.4M', avgVol: '7.8M', confluence: 8.8, confluenceText: 'HIGH SYNC', confluenceOffset: '12', patternName: 'Ascending Triangle', patternZone: 'Resistance', volumeConfirmText: 'Strong Buying', volumeConfirmWidth: '80%', indicators: { vwap: '1220.00', ema20: '1200.00', ema50: '1180.00' }, targetPrice: '1280', entryPrice: '1230', invalidationPrice: '1200', targetTop: '25%', entryTop: '55%', invalBottom: '15%' },
+            'SBIN': { name: 'STATE BANK OF INDIA', exchangeSymbol: 'NSE: SBIN', price: 838.50, high: 850.00, low: 820.00, volume: '15.2M', avgVol: '14.5M', confluence: 7.8, confluenceText: 'STABLE TREND', confluenceOffset: '22', patternName: 'Trendline Bounce', patternZone: 'Support', volumeConfirmText: 'Steady Flow', volumeConfirmWidth: '65%', indicators: { vwap: '830.00', ema20: '815.00', ema50: '790.00' }, targetPrice: '880', entryPrice: '840', invalidationPrice: '810', targetTop: '20%', entryTop: '50%', invalBottom: '20%' },
+            'L&T': { name: 'LARSEN & TOUBRO', exchangeSymbol: 'NSE: LT', price: 3639.00, high: 3680.00, low: 3600.00, volume: '1.8M', avgVol: '2.2M', confluence: 8.1, confluenceText: 'HIGH SYNC', confluenceOffset: '19', patternName: 'Cup & Handle', patternZone: 'Breakout', volumeConfirmText: 'Above Average', volumeConfirmWidth: '75%', indicators: { vwap: '3620.00', ema20: '3580.00', ema50: '3500.00' }, targetPrice: '3800', entryPrice: '3650', invalidationPrice: '3550', targetTop: '15%', entryTop: '45%', invalBottom: '25%' },
+            'AXIS BANK': { name: 'AXIS BANK LTD', exchangeSymbol: 'NSE: AXISBANK', price: 1245.20, high: 1260.00, low: 1230.00, volume: '6.5M', avgVol: '7.1M', confluence: 6.9, confluenceText: 'MEAN REVERSION', confluenceOffset: '31', patternName: 'Channel Support', patternZone: 'Support', volumeConfirmText: 'Neutral Flow', volumeConfirmWidth: '50%', indicators: { vwap: '1250.00', ema20: '1265.00', ema50: '1280.00' }, targetPrice: '1300', entryPrice: '1250', invalidationPrice: '1220', targetTop: '35%', entryTop: '65%', invalBottom: '10%' },
+            'KOTAK BANK': { name: 'KOTAK MAHINDRA BANK', exchangeSymbol: 'NSE: KOTAKBANK', price: 1785.40, high: 1800.00, low: 1770.00, volume: '3.4M', avgVol: '4.0M', confluence: 7.5, confluenceText: 'STABLE TREND', confluenceOffset: '25', patternName: 'Consolidation', patternZone: 'Midband', volumeConfirmText: 'Average Flow', volumeConfirmWidth: '55%', indicators: { vwap: '1780.00', ema20: '1760.00', ema50: '1740.00' }, targetPrice: '1850', entryPrice: '1790', invalidationPrice: '1750', targetTop: '25%', entryTop: '55%', invalBottom: '15%' },
+            'ITC': { name: 'ITC LTD', exchangeSymbol: 'NSE: ITC', price: 422.10, high: 430.00, low: 415.00, volume: '22.5M', avgVol: '20.1M', confluence: 8.6, confluenceText: 'HIGH SYNC', confluenceOffset: '14', patternName: 'Wedge Breakout', patternZone: 'Resistance', volumeConfirmText: 'Strong Anomaly', volumeConfirmWidth: '88%', indicators: { vwap: '418.00', ema20: '410.00', ema50: '400.00' }, targetPrice: '450', entryPrice: '425', invalidationPrice: '410', targetTop: '20%', entryTop: '50%', invalBottom: '20%' }
         };
         return stockDatabase[symbol];
     }
@@ -1490,9 +1434,9 @@ void main() {
     setInterval(() => {
         const ticker = document.querySelector('.font-label-caps.text-label-caps.text-on-surface');
         if (ticker) {
-            const nifty = (22450.20 + (Math.random() * 10 - 5)).toFixed(2);
-            const change = (1.2 + (Math.random() * 0.1 - 0.05)).toFixed(2);
-            ticker.textContent = `NIFTY: ${nifty} (+${change}%) | SENSEX: 74,120.45 (+0.8%) | VIX: 12.4 (-2.1%)`;
+            const nifty = (24423.95 + (Math.random() * 10 - 5)).toFixed(2);
+            const change = (0.63 + (Math.random() * 0.1 - 0.05)).toFixed(2);
+            ticker.textContent = `NIFTY: ${nifty} (+${change}%) | SENSEX: 78,255.38 (+0.63%) | VIX: 11.85 (+0.42%)`;
         }
 
         // Simulating live ticking of the last candle close value
