@@ -50,12 +50,13 @@
         </div>
         
         <!-- Typography -->
-        <div style="text-align: center; z-index: 10; animation: scale-up 1.2s ease-out;">
-            <h2 style="font-size: 10px; letter-spacing: 0.35em; color: #adc6ff; font-weight: 700; margin-bottom: 8px; text-transform: uppercase;">INITIALIZING TRADEX SYSTEM</h2>
-            <h1 style="font-size: 24px; font-weight: 900; color: #ffffff; letter-spacing: 0.05em; line-height: 1.3;">
-                MADE BY <span style="background: linear-gradient(to right, #66fdac, #adc6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(102,253,172,0.4)); font-weight: 900;">ABHISHEK RULANIYA</span>
+        <div style="text-align: center; z-index: 10; animation: scale-up 1.2s ease-out; padding: 0 20px; max-width: 100vw; box-sizing: border-box;">
+            <h2 style="font-size: clamp(8px, 3vw, 10px); letter-spacing: 0.35em; color: #adc6ff; font-weight: 700; margin-bottom: 12px; text-transform: uppercase;">INITIALIZING TRADEX SYSTEM</h2>
+            <h1 style="font-size: clamp(18px, 5vw, 26px); font-weight: 900; color: #ffffff; letter-spacing: 0.05em; line-height: 1.4; display: flex; flex-direction: column; gap: 4px;">
+                <span>MADE BY</span>
+                <span style="background: linear-gradient(to right, #66fdac, #adc6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(102,253,172,0.4)); font-weight: 900;">ABHISHEK RULANIYA</span>
             </h1>
-            <p style="font-size: 11px; letter-spacing: 0.2em; color: #8f9194; margin-top: 6px; font-weight: 600;">IN 3D &amp; BEST VISUALS POSSIBLE</p>
+            <p style="font-size: clamp(9px, 2.5vw, 11px); letter-spacing: 0.2em; color: #8f9194; margin-top: 12px; font-weight: 600;">IN 3D &amp; BEST VISUALS POSSIBLE</p>
         </div>
         
         <!-- Progress loader -->
@@ -312,4 +313,4 @@ function changeThemePalette(color) {
     console.log(`Changed theme highlight color to: ${color}`);
 }
 
-// Build Trigger: 1783294256.7562346
+// Build Trigger: FORCE_SPLASH_MOBILE_FIX 1783294256.7562346
