@@ -242,9 +242,9 @@ setTimeout(function() {
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col min-w-0 bg-transparent overflow-hidden relative">
+    <main class="flex-1 flex flex-col min-w-0 bg-transparent overflow-y-auto overflow-x-hidden relative">
         <!-- Top App Bar (Ticker) -->
-        <header class="flex items-center justify-between px-6 py-2 bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant shrink-0">
+        <header class="flex items-center justify-between px-3 md:px-6 py-2 bg-surface-container-lowest/80 backdrop-blur-md border-b border-outline-variant shrink-0">
             <div class="flex items-center gap-3">
                 <span class="material-symbols-outlined text-tertiary text-sm market-pulse drop-shadow-[0_0_5px_rgba(102,253,172,0.8)]">sensors</span>
                 <span class="font-data-tabular text-[12px] text-tertiary tracking-wider" id="ticker-text">NIFTY: 22,450.20 (+1.2%) | SENSEX: 74,120.45 (+0.8%) | VIX: 12.4 (-2.1%)</span>
@@ -259,7 +259,7 @@ setTimeout(function() {
         </header>
 
         <!-- Top Navigation -->
-        <nav class="flex justify-between items-center w-full px-container-padding h-input-height bg-background/60 backdrop-blur-xl border-b border-outline-variant sticky top-0 z-50 shrink-0">
+        <nav class="flex justify-between items-center w-full px-3 md:px-container-padding h-input-height bg-background/60 backdrop-blur-xl border-b border-outline-variant sticky top-0 z-50 shrink-0">
             <div class="flex items-center gap-8">
                 <h1 class="font-display-lg text-display-lg font-black text-tertiary tracking-tighter cursor-pointer" onclick="window.location.href='index.html'">TRADEX TERMINAL</h1>
                 <div class="hidden md:flex gap-6">

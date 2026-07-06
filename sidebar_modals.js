@@ -1,6 +1,12 @@
-// 3D Shiny Sky Blue Watermark (Top Left)
+// 3D Shiny Sky Blue Watermark (Top Left) - Hidden on mobile
 (function() {
+    // Inject media query to hide watermark on small screens
+    const wmStyle = document.createElement('style');
+    wmStyle.innerHTML = '@media (max-width: 767px) { #tradex-watermark { display: none !important; } }';
+    document.head.appendChild(wmStyle);
+
     const watermark = document.createElement('div');
+    watermark.id = 'tradex-watermark';
     watermark.style.cssText = "position: fixed; top: 12px; left: 24px; z-index: 999998; font-family: 'Roboto Mono', monospace; font-size: 8px; font-weight: 800; color: #80d8ff; letter-spacing: 0.15em; text-transform: uppercase; pointer-events: none; opacity: 0.9; text-shadow: 1px 1px 0px #0056b3, 2px 2px 0px #002b5c, 0 0 8px rgba(128, 216, 255, 0.7); display: flex; align-items: center; gap: 5px;";
     watermark.innerHTML = `
         <span style="width: 5px; height: 5px; border-radius: 50%; background-color: #80d8ff; box-shadow: 0 0 6px #80d8ff; display: inline-block;"></span>
