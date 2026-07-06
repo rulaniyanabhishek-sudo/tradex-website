@@ -264,6 +264,11 @@
 @keyframes splash-progress-grow { 0% { width: 0%; } 100% { width: 100%; } }
 </style>
 <div id="intro-splash-inline" style="position: fixed; inset: 0; z-index: 9999999; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #05070a; overflow: hidden; font-family: 'Inter', sans-serif; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);">
+    <script>
+        if (sessionStorage.getItem('tradexIntroShown')) {
+            document.getElementById('intro-splash-inline').style.display = 'none';
+        }
+    </script>
     <!-- Glowing nebula backdrop -->
     <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(102, 253, 172, 0.12) 0%, transparent 60%); animation: splash-pulse-glow 4s ease-in-out infinite;"></div>
     <!-- 3D Crystalline Spinning Elements -->
@@ -291,11 +296,14 @@
 <script>
 setTimeout(function() {
     var s = document.getElementById('intro-splash-inline');
-    if (s) {
+    if (s && !sessionStorage.getItem('tradexIntroShown')) {
+        sessionStorage.setItem('tradexIntroShown', 'true');
         s.style.opacity = '0';
         s.style.transform = 'scale(1.05)';
         s.style.pointerEvents = 'none';
         setTimeout(function() { s.remove(); }, 800);
+    } else if (s) {
+        s.remove();
     }
 }, 3800);
 </script>
